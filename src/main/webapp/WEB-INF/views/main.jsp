@@ -26,6 +26,9 @@
         </tr>
     </c:forEach>
 </table>
-
+<h2></h2>
+<form:form method="post" action="add">
+    <input type="submit" value="Добавить">
+</form:form>
 </body>
 </html>

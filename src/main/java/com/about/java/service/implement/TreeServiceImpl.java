@@ -19,7 +19,8 @@ public class TreeServiceImpl implements TreeService{
     @Autowired
     private TreeDAO treeDAO;
 
-    public Long addTree(Tree tree) throws ObjectAlreadyExistsException {
+    @Transactional
+    public Long add(Tree tree) throws ObjectAlreadyExistsException {
         if (tree == null){
             throw new NullPointerException();
         }

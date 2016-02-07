@@ -8,7 +8,7 @@ import com.about.java.service.exceptions.ObjectAlreadyExistsException;
 import java.util.List;
 
 public interface TreeService {
-    Long addTree(Tree tree) throws ObjectAlreadyExistsException;
+    Long add(Tree tree) throws ObjectAlreadyExistsException;
     Long updateTree(Long id, String type);
     Tree getTree(Long id) throws NoSuchObjectException;
     List<Tree> getAllTree();

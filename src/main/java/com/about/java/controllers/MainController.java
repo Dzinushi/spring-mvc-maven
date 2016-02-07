@@ -2,6 +2,7 @@ package com.about.java.controllers;
 
 import com.about.java.models.Tree;
 import com.about.java.service.exceptions.NoSuchObjectException;
+import com.about.java.service.exceptions.ObjectAlreadyExistsException;
 import com.about.java.service.interfaces.TreeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -52,5 +53,18 @@ public class MainController {
     @RequestMapping(value = "/add")
     public void add(){
 
+    }
+
+    @RequestMapping(value = "/newTree", method = RequestMethod.POST)
+    public String add(@RequestParam(value = "id") Long id,
+                      @RequestParam(value = "type") String type){
+
+        try {
+            treeService.add(new Tree(id, type));
+        } catch (ObjectAlreadyExistsException e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:";
     }
 }
