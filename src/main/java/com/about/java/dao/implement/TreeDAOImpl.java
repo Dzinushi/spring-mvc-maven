@@ -21,6 +21,13 @@ public class TreeDAOImpl implements TreeDAO{
         return tree.getId();
     }
 
+    public Long updateTree(Long id, String type) {
+        Tree lastTree = (Tree) sessionFactory.getCurrentSession().get(Tree.class, id);
+        lastTree.setType(type);
+        sessionFactory.getCurrentSession().update(lastTree);
+        return id;
+    }
+
     public Tree getTree(Long id) {
         return (Tree) sessionFactory.getCurrentSession().get(Tree.class, id);
     }

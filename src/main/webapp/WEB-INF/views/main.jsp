@@ -13,21 +13,19 @@
     <c:forEach items="${trees}" var="tree">
         <tr>
             <td>${tree.id}</td>
-            <td>${tree.type}</td>
-            <td>
+            <form:form method="post" action="update">
+                    <input type="hidden" name="id" value="${tree.id}">
+                <td><input name="type" type="text" value="${tree.type}"></td>
+                <td><input type="submit" value="Обновить"></td>
+                </form:form>
+
                 <form:form method="post" action="delete">
-                    <input type="hidden" name="id" value=${tree.id}>
-                    <input type="submit" value="Удалить">
+                        <input type="hidden" name="id" value=${tree.id}>
+                    <td><input type="submit" value="Удалить"></td>
                 </form:form>
-            </td>
-            <td>
-                <form:form method="post" action="edit">
-                    <input type="hidden" name="id" value=${tree.id}>
-                    <input type="submit" value="Изменить">
-                </form:form>
-            </td>
         </tr>
     </c:forEach>
 </table>
+
 </body>
 </html>

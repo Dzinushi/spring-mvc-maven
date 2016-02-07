@@ -40,10 +40,12 @@ public class MainController {
         return "redirect:";
     }
 
-    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
     public String edit(@RequestParam(value = "id") Long id,
                        @RequestParam(value = "type") String type){
 
+
+        treeService.updateTree(id, type);
         return "redirect:";
     }
 

@@ -31,6 +31,14 @@ public class TreeServiceImpl implements TreeService{
         }
     }
 
+    @Transactional
+    public Long updateTree(Long id, String type) {
+        if (id == null | type == null){
+            throw new NullPointerException();
+        }
+        return treeDAO.updateTree(id, type);
+    }
+
     public Tree getTree(Long id) throws NoSuchObjectException{
         if (id == null){
             throw new NullPointerException();
