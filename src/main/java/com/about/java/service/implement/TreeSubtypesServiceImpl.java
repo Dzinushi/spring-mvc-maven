@@ -1,11 +1,10 @@
 package com.about.java.service.implement;
 
-
-import com.about.java.dao.interfaces.TreeDAO;
-import com.about.java.models.Tree;
+import com.about.java.dao.interfaces.TreeSubtypesDAO;
+import com.about.java.models.trees.TreeSubtypes;
 import com.about.java.service.exceptions.NoSuchObjectException;
 import com.about.java.service.exceptions.ObjectAlreadyExistsException;
-import com.about.java.service.interfaces.TreeService;
+import com.about.java.service.interfaces.TreeSubtypesService;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,47 +13,47 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class TreeServiceImpl implements TreeService{
+public class TreeSubtypesServiceImpl implements TreeSubtypesService{
 
     @Autowired
-    private TreeDAO treeDAO;
+    private TreeSubtypesDAO treeSubtypesDAO;
 
     @Transactional
-    public Long add(Tree tree) throws ObjectAlreadyExistsException {
-        if (tree == null){
+    public Long add(TreeSubtypes treeSubtypes) throws ObjectAlreadyExistsException {
+        if (treeSubtypes == null){
             throw new NullPointerException();
         }
 
         try{
-            return treeDAO.addTree(tree);
+            return treeSubtypesDAO.addTreeSubtype(treeSubtypes);
         } catch (HibernateException e){
             throw new ObjectAlreadyExistsException();
         }
     }
 
     @Transactional
-    public Long updateTree(Long id, String type) {
-        if (id == null | type == null){
+    public Long updateTree(TreeSubtypes treeSubtypes) {
+        if (treeSubtypes.getId() == null){
             throw new NullPointerException();
         }
-        return treeDAO.updateTree(id, type);
+        return treeSubtypesDAO.updateTreeSubtype(treeSubtypes);
     }
 
-    public Tree getTree(Long id) throws NoSuchObjectException{
+    public TreeSubtypes getTree(Long id) throws NoSuchObjectException {
         if (id == null){
             throw new NullPointerException();
         }
 
         try{
-            return treeDAO.getTree(id);
+            return treeSubtypesDAO.getTreeSubtype(id);
         } catch (HibernateException e){
             throw new NoSuchObjectException();
         }
     }
 
     @Transactional
-    public List<Tree> getAllTree() {
-        return treeDAO.getTrees();
+    public List<TreeSubtypes> getAllTree() {
+        return treeSubtypesDAO.getTreeSubtypes();
     }
 
     @Transactional
@@ -64,7 +63,7 @@ public class TreeServiceImpl implements TreeService{
         }
 
         try{
-            treeDAO.deleteTree(id);
+            treeSubtypesDAO.deleteTreeSubtype(id);
         } catch (HibernateException e){
             throw new NoSuchObjectException();
         }

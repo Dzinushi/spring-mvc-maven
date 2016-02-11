@@ -1,10 +1,11 @@
-package com.about.java.models;
+package com.about.java.models.trees;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "Tree")
-public class Tree {
+@Table(name = "TreeTypes")
+public class TreeTypes {
 
     @Id
     @Column(name = "id")
@@ -14,10 +15,14 @@ public class Tree {
     @Column(name = "type")
     private String type;
 
-    public Tree()
+    @OneToMany
+    @JoinColumn(name = "TreeTypes_id")
+    private List<TreeSubtypes> treeSubtypes;
+
+    public TreeTypes()
     {}
 
-    public Tree(Long id, String type){
+    public TreeTypes(Long id, String type){
         this.id = id;
         this.type = type;
     }
@@ -36,5 +41,13 @@ public class Tree {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public List<TreeSubtypes> getTreeSubtypes() {
+        return treeSubtypes;
+    }
+
+    public void setTreeSubtypes(List<TreeSubtypes> treeSubtypes) {
+        this.treeSubtypes = treeSubtypes;
     }
 }

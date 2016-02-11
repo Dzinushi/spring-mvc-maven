@@ -10,17 +10,17 @@
         <th>Id</th>
         <th>Деревья</th>
     </tr>
-    <c:forEach items="${trees}" var="tree">
+    <c:forEach items="${treeTypes}" var="treeType">
         <tr>
-            <td>${tree.id}</td>
+            <td>${treeType.id}</td>
             <form:form method="post" action="update">
-                    <input type="hidden" name="id" value="${tree.id}">
-                <td><input name="type" type="text" value="${tree.type}"></td>
+                    <input type="hidden" name="id" value="${treeType.id}">
+                <td><input name="type" type="text" value="${treeType.type}"></td>
                 <td><input type="submit" value="Обновить"></td>
                 </form:form>
 
                 <form:form method="post" action="delete">
-                        <input type="hidden" name="id" value=${tree.id}>
+                        <input type="hidden" name="id" value=${treeType.id}>
                     <td><input type="submit" value="Удалить"></td>
                 </form:form>
         </tr>
