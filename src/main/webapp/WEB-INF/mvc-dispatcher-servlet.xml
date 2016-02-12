@@ -32,8 +32,10 @@
         <property name="dataSource" ref="dataSource" />
         <property name="annotatedClasses">
             <beans:list>
-                <value>com.about.java.models.trees.TreeTypes</value>
-                <value>com.about.java.models.trees.TreeSubtypes</value>
+                <value>com.about.java.models.Family</value>
+                <value>com.about.java.models.Tree</value>
+                <value>com.about.java.models.Poison</value>
+                <value>com.about.java.models.Pest</value>
             </beans:list>
         </property>
         <property name="hibernateProperties">

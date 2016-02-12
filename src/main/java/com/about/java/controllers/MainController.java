@@ -1,10 +1,8 @@
 package com.about.java.controllers;
 
-import com.about.java.models.trees.TreeTypes;
+import com.about.java.models.Tree;
 import com.about.java.service.exceptions.NoSuchObjectException;
-import com.about.java.service.exceptions.ObjectAlreadyExistsException;
-import com.about.java.service.interfaces.TreeSubtypesService;
-import com.about.java.service.interfaces.TreeTypesService;
+import com.about.java.service.interfaces.TreeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,34 +17,31 @@ import java.util.List;
 public class MainController {
 
     @Autowired
-    private TreeTypesService treeTypesService;
-
-    @Autowired
-    private TreeSubtypesService treeSubtypesService;
+    private TreeService treeService;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView mainpage() {
         ModelAndView mav = new ModelAndView("main");
 
-        List<TreeTypes> treeTypes = new ArrayList<TreeTypes>();
-        treeTypes = treeTypesService.getAllTree();
+        List<Tree> trees = new ArrayList<Tree>();
+        try {
+            trees = treeService.get();
+        } catch (NoSuchObjectException e) {
+            e.printStackTrace();
+        }
 
-//        List<TreeSubtypes> treeSubtypes = new ArrayList<TreeSubtypes>();
-//        treeSubtypes = treeSubtypesService.getAllTree();
-
-        mav.addObject("treeTypes", treeTypes);
-//        mav.addObject("treeSubtypes", treeSubtypes);
+        mav.addObject("trees", trees);
         return mav;
     }
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String delete(@RequestParam(value = "id") Long id){
 
-        try {
-            treeTypesService.deleteInvitation(id);
-        } catch (NoSuchObjectException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            treeTypesService.deleteInvitation(id);
+//        } catch (NoSuchObjectException e) {
+//            e.printStackTrace();
+//        }
 
         return "redirect:";
     }
@@ -55,7 +50,7 @@ public class MainController {
     public String edit(@RequestParam(value = "id") Long id,
                        @RequestParam(value = "type") String type){
 
-        //reeTypesService.updateTree(new TreeTypes(id, type));
+        //reeTypesService.updateTree(new Tree(id, type));
         return "redirect:";
     }
 
@@ -68,11 +63,11 @@ public class MainController {
     public String add(@RequestParam(value = "id") Long id,
                       @RequestParam(value = "type") String type){
 
-        try {
-            treeTypesService.add(new TreeTypes(id, type));
-        } catch (ObjectAlreadyExistsException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            treeTypesService.add(new Tree(id, type));
+//        } catch (ObjectAlreadyExistsException e) {
+//            e.printStackTrace();
+//        }
 
         return "redirect:";
     }

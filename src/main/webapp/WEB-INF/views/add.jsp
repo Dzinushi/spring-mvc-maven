@@ -6,21 +6,21 @@
 </head>
 <body>
 
-<form:form method="post" action="newTree">
-<table border="1" cellpadding="3" cellspacing="1">
-    <tr>
-        <td>Id</td>
-        <td><input type="text" name="id"></td>
-    </tr>
-    <tr>
-        <td>Тип</td>
-        <td><input type="text" name="type"></td>
-    </tr>
-</table>
+<%--<form:form method="post" action="newTree">--%>
+<%--<table border="1" cellpadding="3" cellspacing="1">--%>
+    <%--<tr>--%>
+        <%--<td>Id</td>--%>
+        <%--<td><input type="text" name="id"></td>--%>
+    <%--</tr>--%>
+    <%--<tr>--%>
+        <%--<td>Тип</td>--%>
+        <%--<td><input type="text" name="type"></td>--%>
+    <%--</tr>--%>
+<%--</table>--%>
 
-<h2></h2>
-<input type="submit" value="Добавить"/>
-</form:form>
+<%--<h2></h2>--%>
+<%--<input type="submit" value="Добавить"/>--%>
+<%--</form:form>--%>
 
 </body>
 </html>
