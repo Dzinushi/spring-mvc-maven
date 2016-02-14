@@ -10,13 +10,10 @@ public class Tree {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
 
-    @Column(name = "family")
-    private String family;
-
-    @Column(name = "subtype")
-    private String subtype;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "height")
     private String height;
@@ -25,10 +22,8 @@ public class Tree {
     private String describe;
 
     @ManyToOne
-    private Tree parent;
-
-    @OneToMany(mappedBy = "parent")
-    private List<Tree> childrens;
+    @JoinColumn(name = "care_id")
+    private Care care;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "tree_has_poison",
@@ -45,14 +40,6 @@ public class Tree {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getSubtype() {
-        return subtype;
-    }
-
-    public void setSubtype(String subtype) {
-        this.subtype = subtype;
     }
 
     public String getHeight() {
@@ -79,27 +66,19 @@ public class Tree {
         this.poisons = poisons;
     }
 
-    public String getFamily() {
-        return family;
+    public Care getCare() {
+        return care;
     }
 
-    public void setFamily(String family) {
-        this.family = family;
+    public void setCare(Care care) {
+        this.care = care;
     }
 
-    public Tree getParent() {
-        return parent;
+    public String getName() {
+        return name;
     }
 
-    public void setParent(Tree parent) {
-        this.parent = parent;
-    }
-
-    public List<Tree> getChildrens() {
-        return childrens;
-    }
-
-    public void setChildrens(List<Tree> childrens) {
-        this.childrens = childrens;
+    public void setName(String name) {
+        this.name = name;
     }
 }

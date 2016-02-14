@@ -1,7 +1,7 @@
 package com.about.java.dao.implement;
 
-import com.about.java.dao.interfaces.TreeDAO;
-import com.about.java.models.Tree;
+import com.about.java.dao.interfaces.CareDAO;
+import com.about.java.models.Care;
 import com.about.java.service.exceptions.NoSuchObjectException;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
@@ -10,44 +10,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Objects;
 
 @Repository
-public class TreeDAOImpl implements TreeDAO {
+public class CareDAOImpl implements CareDAO{
 
     @Autowired
     private SessionFactory sessionFactory;
 
-    public long addTree(Tree tree) {
-        if (tree == null || tree.getId() == 0){
+    public long addCare(Care care) {
+        if (care == null || care.getId() == 0){
             throw new NullPointerException();
         }
-
-        sessionFactory.getCurrentSession().save(tree);
-        return tree.getId();
+        sessionFactory.getCurrentSession().save(care);
+        return care.getId();
     }
 
-    public long updateTree(Tree tree) throws NoSuchObjectException{
-        if (tree == null || tree.getId() == 0){
+    public long updateCare(Care care) throws NoSuchObjectException {
+        if (care == null || care.getId() == 0){
             throw new NullPointerException();
         }
-
-        sessionFactory.getCurrentSession().update(tree);
-        return tree.getId();
+        sessionFactory.getCurrentSession().update(care);
+        return care.getId();
     }
 
-    public Tree getTree(long id) {
+    public Care getCare(long id) {
         if (id == 0){
             throw new NullPointerException();
         }
-        return  (Tree) sessionFactory.getCurrentSession().get(Tree.class, id);
+        return (Care) sessionFactory.getCurrentSession().get(Care.class, id);
     }
 
-    public List<Tree> getTree() {
+    public List<Care> getCare() {
         try{
             Criteria criteria = sessionFactory.
                     getCurrentSession().
-                    createCriteria(Tree.class);
+                    createCriteria(Care.class);
             return criteria.list();
         } catch (HibernateException e){
             e.printStackTrace();
@@ -56,13 +53,13 @@ public class TreeDAOImpl implements TreeDAO {
         return null;
     }
 
-    public void deleteTree(long id) throws NoSuchObjectException {
+    public void delete(long id) throws NoSuchObjectException {
         if (id == 0){
             throw new NullPointerException();
         }
 
-        Tree foundTree = (Tree) sessionFactory.getCurrentSession().get(Tree.class, id);
-        if (foundTree == null || foundTree.getId() == 0){
+        Care foundTree = (Care) sessionFactory.getCurrentSession().get(Care.class, id);
+        if (foundTree == null){
             throw new NoSuchObjectException();
         }
         sessionFactory.getCurrentSession().delete(foundTree);

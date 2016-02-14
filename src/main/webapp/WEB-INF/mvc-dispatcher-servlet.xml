@@ -23,8 +23,8 @@
         <property name="driverClassName" value="com.mysql.jdbc.Driver" />
         <property name="url"
                   value="jdbc:mysql://localhost:3306/garden_model" />
-        <property name="username" value="I" />
-        <property name="password" value="qzwxas46829173" />
+        <property name="username" value="root" />
+        <property name="password" value="root" />
     </bean>
 
     <bean id="hibernate4AnnotatedSessionFactory"
@@ -32,7 +32,7 @@
         <property name="dataSource" ref="dataSource" />
         <property name="annotatedClasses">
             <beans:list>
-                <value>com.about.java.models.Family</value>
+                <value>com.about.java.models.Care</value>
                 <value>com.about.java.models.Tree</value>
                 <value>com.about.java.models.Poison</value>
                 <value>com.about.java.models.Pest</value>

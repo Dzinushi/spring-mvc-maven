@@ -19,20 +19,8 @@ public class TreeServiceImpl implements TreeService {
     @Autowired
     private TreeDAO treeTypesDAO;
 
-    public Long addTreeFamily(Tree treeFamily) {
-        return null;
-    }
-
-    public Long updateTreeFamily(Tree treeFamily) {
-        return null;
-    }
-
-    public Long deleteTreeFamily(Long id) {
-        return null;
-    }
-
     @Transactional
-    public Long add(Tree tree) throws ObjectAlreadyExistsException {
+    public long add(Tree tree) throws ObjectAlreadyExistsException {
         if (tree == null){
             throw new NullPointerException();
         }
@@ -45,7 +33,7 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Transactional
-    public Long update(Tree tree) throws NoSuchObjectException {
+    public long update(Tree tree) throws NoSuchObjectException {
         if (tree.getId() == null){
             throw new NullPointerException();
         }
@@ -57,8 +45,8 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Transactional
-    public Tree get(Tree tree) throws NoSuchObjectException{
-        if (id == null){
+    public Tree get(long id) throws NoSuchObjectException{
+        if (id == 0){
             throw new NullPointerException();
         }
 
@@ -79,8 +67,8 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Transactional
-    public void delete(Tree tree) throws NoSuchObjectException {
-        if (idTree == null){
+    public void delete(long id) throws NoSuchObjectException {
+        if (id == 0){
             throw new NullPointerException();
         }
 
