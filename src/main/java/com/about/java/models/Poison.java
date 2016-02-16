@@ -18,13 +18,13 @@ public class Poison {
     @Column(name = "type")
     private String type;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "tree_has_poison",
             joinColumns = {@JoinColumn(name = "poison_id")},
             inverseJoinColumns = {@JoinColumn(name = "tree_id")})
     private List<Tree> trees;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "poison_has_pests",
             joinColumns = {@JoinColumn(name = "poison_id")},
             inverseJoinColumns = {@JoinColumn(name = "pests_id")})

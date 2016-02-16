@@ -8,21 +8,23 @@
 <table border="1" cellpadding="3" cellspacing="1">
     <tr>
         <th>Id</th>
-        <th>Деревья</th>
+        <th>Виды</th>
+        <th>Описание</th>
     </tr>
     <c:forEach items="${trees}" var="tree">
         <tr>
             <td>${tree.id}</td>
             <form:form method="post" action="update">
-                    <input type="hidden" name="id" value="${tree.id}">
+                    <input name="id" type="hidden" value="${tree.id}">
                 <td><input name="type" type="text" value="${tree.name}"></td>
-                <td><input type="submit" value="Обновить"></td>
+                <td><input name="care" type="text" value="${tree.care.describe}"></td>
+                <%--<td><input type="submit" value="Обновить"></td>--%>
                 </form:form>
 
-                <form:form method="post" action="delete">
-                        <input type="hidden" name="id" value=${tree.id}>
-                    <td><input type="submit" value="Удалить"></td>
-                </form:form>
+                <%--<form:form method="post" action="delete">--%>
+                        <%--<input type="hidden" name="id" value=${tree.id}>--%>
+                    <%--<td><input type="submit" value="Удалить"></td>--%>
+                <%--</form:form>--%>
         </tr>
     </c:forEach>
 </table>

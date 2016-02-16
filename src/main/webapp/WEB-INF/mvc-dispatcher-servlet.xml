@@ -23,8 +23,8 @@
         <property name="driverClassName" value="com.mysql.jdbc.Driver" />
         <property name="url"
                   value="jdbc:mysql://localhost:3306/garden_model" />
-        <property name="username" value="root" />
-        <property name="password" value="root" />
+        <property name="username" value="I" />
+        <property name="password" value="qzwxas46829173" />
     </bean>
 
     <bean id="hibernate4AnnotatedSessionFactory"

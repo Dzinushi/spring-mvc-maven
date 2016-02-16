@@ -15,7 +15,7 @@ public class Pest {
     @Column(name = "name")
     private String name;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "poison_has_pests",
             joinColumns = {@JoinColumn(name = "pests_id")},
             inverseJoinColumns = {@JoinColumn(name = "poison_id")})
