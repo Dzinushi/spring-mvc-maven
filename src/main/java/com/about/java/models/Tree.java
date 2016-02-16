@@ -25,7 +25,7 @@ public class Tree {
     @JoinColumn(name = "care_id")
     private Care care;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "tree_has_poison",
             joinColumns = {@JoinColumn(name = "tree_id")},
             inverseJoinColumns = {@JoinColumn(name = "poison_id")})
