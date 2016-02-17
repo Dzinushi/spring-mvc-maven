@@ -5,6 +5,7 @@ import com.about.java.models.Tree;
 import com.about.java.service.exceptions.NoSuchObjectException;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -44,16 +45,8 @@ public class TreeDAOImpl implements TreeDAO {
     }
 
     public List<Tree> getTree() {
-        try{
-            Criteria criteria = sessionFactory.
-                    getCurrentSession().
-                    createCriteria(Tree.class);
-            return criteria.list();
-        } catch (HibernateException e){
-            e.printStackTrace();
-        }
-
-        return null;
+        Query query = sessionFactory.getCurrentSession().createQuery("From Tree");
+        return query.list();
     }
 
     public void deleteTree(long id) throws NoSuchObjectException {

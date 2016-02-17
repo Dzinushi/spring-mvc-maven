@@ -3,8 +3,7 @@ package com.about.java.dao.implement;
 import com.about.java.dao.interfaces.PestDAO;
 import com.about.java.models.Pest;
 import com.about.java.service.exceptions.NoSuchObjectException;
-import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -44,16 +43,8 @@ public class PestDAOImpl implements PestDAO{
     }
 
     public List<Pest> getPest() {
-        try{
-            Criteria criteria = sessionFactory.
-                    getCurrentSession().
-                    createCriteria(Pest .class);
-            return criteria.list();
-        } catch (HibernateException e){
-            e.printStackTrace();
-        }
-
-        return null;
+        Query query = sessionFactory.getCurrentSession().createQuery("from Pest");
+        return query.list();
     }
 
     public void deletePest(Long id) throws NoSuchObjectException {

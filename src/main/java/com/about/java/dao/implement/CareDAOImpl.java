@@ -5,6 +5,7 @@ import com.about.java.models.Care;
 import com.about.java.service.exceptions.NoSuchObjectException;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -41,16 +42,8 @@ public class CareDAOImpl implements CareDAO{
     }
 
     public List<Care> getCare() {
-        try{
-            Criteria criteria = sessionFactory.
-                    getCurrentSession().
-                    createCriteria(Care.class);
-            return criteria.list();
-        } catch (HibernateException e){
-            e.printStackTrace();
-        }
-
-        return null;
+        Query query = sessionFactory.getCurrentSession().createQuery("from Care");
+        return query.list();
     }
 
     public void delete(long id) throws NoSuchObjectException {

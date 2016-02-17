@@ -1,10 +1,11 @@
 package com.about.java.service.implement;
 
-
 import com.about.java.dao.interfaces.TreeDAO;
+import com.about.java.dto.TreeDTO;
 import com.about.java.models.Tree;
 import com.about.java.service.exceptions.NoSuchObjectException;
 import com.about.java.service.exceptions.ObjectAlreadyExistsException;
+import com.about.java.service.interfaces.PoisonService;
 import com.about.java.service.interfaces.TreeService;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class TreeServiceImpl implements TreeService {
 
     @Autowired
     private TreeDAO treeTypesDAO;
+
+    @Autowired
+    private PoisonService poisonService;
 
     @Transactional
     public long add(Tree tree) throws ObjectAlreadyExistsException {
@@ -45,22 +49,22 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Transactional
-    public Tree get(long id) throws NoSuchObjectException{
+    public TreeDTO get(long id) throws NoSuchObjectException{
         if (id == 0){
             throw new NullPointerException();
         }
 
         try{
-            return treeTypesDAO.getTree(id);
+            return new TreeDTO(treeTypesDAO.getTree(id));
         } catch (HibernateException e){
             throw new NoSuchObjectException();
         }
     }
 
     @Transactional
-    public List<Tree> get() throws NoSuchObjectException {
+    public TreeDTO get() throws NoSuchObjectException {
         try {
-            return treeTypesDAO.getTree();
+            return new TreeDTO(treeTypesDAO.getTree());
         } catch (HibernateException e){
             throw new NoSuchObjectException();
         }

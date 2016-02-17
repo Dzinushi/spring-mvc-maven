@@ -1,5 +1,6 @@
 package com.about.java.controllers;
 
+import com.about.java.dto.TreeDTO;
 import com.about.java.models.Tree;
 import com.about.java.service.exceptions.NoSuchObjectException;
 import com.about.java.service.interfaces.TreeService;
@@ -23,14 +24,14 @@ public class MainController {
     public ModelAndView mainpage() {
         ModelAndView mav = new ModelAndView("main");
 
-        List<Tree> trees = new ArrayList<Tree>();
+        TreeDTO treeDTO = null;
         try {
-            trees = treeService.get();
+            treeDTO = treeService.get();
         } catch (NoSuchObjectException e) {
             e.printStackTrace();
         }
 
-        mav.addObject("trees", trees);
+        mav.addObject("treeDTO", treeDTO);
         return mav;
     }
 

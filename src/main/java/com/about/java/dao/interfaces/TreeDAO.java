@@ -9,6 +9,6 @@ public interface TreeDAO {
     long addTree(Tree tree);
     long updateTree(Tree tree) throws NoSuchObjectException;
     Tree getTree(long id);
-    List<Tree> getTree();
+    List getTree();
     void deleteTree(long id) throws NoSuchObjectException;
 }

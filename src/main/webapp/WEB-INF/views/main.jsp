@@ -10,7 +10,7 @@
         <th>Виды</th>
         <th>Описание</th>
     </tr>
-    <c:forEach items="${trees}" var="tree">
+    <c:forEach items="${treeDTO.trees}" var="tree">
         <tr>
             <form:form method="post" action="details">
                     <input name="id" type="hidden" value="${tree.id}">
