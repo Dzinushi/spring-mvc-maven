@@ -1,6 +1,7 @@
 package com.about.java.service.implement;
 
 import com.about.java.dao.interfaces.PestDAO;
+import com.about.java.dto.PestDTO;
 import com.about.java.models.Pest;
 import com.about.java.service.exceptions.NoSuchObjectException;
 import com.about.java.service.exceptions.ObjectAlreadyExistsException;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,21 +47,34 @@ public class PestServiceImpl implements PestService{
     }
 
     @Transactional
-    public Pest get(Long id) throws NoSuchObjectException {
+    public PestDTO get(Long id) throws NoSuchObjectException {
         if (id == 0){
             throw new NullPointerException();
         }
         try {
-            return pestDAO.getPest(id);
+            Pest pest = pestDAO.getPest(id);
+            PestDTO pestDTO = new PestDTO();
+            pestDTO.setId(pest.getId());
+            pestDTO.setName(pest.getName());
+            return pestDTO;
+
         } catch (HibernateException e){
             throw new NoSuchObjectException();
         }
     }
 
     @Transactional
-    public List<Pest> get() throws NoSuchObjectException {
+    public List<PestDTO> get() throws NoSuchObjectException {
         try {
-            return pestDAO.getPest();
+            List<Pest> pests = pestDAO.getPest();
+            List<PestDTO> pestDTOs = new ArrayList<PestDTO>();
+            for (Pest pest : pests){
+                PestDTO pestDTO = new PestDTO();
+                pestDTO.setId(pest.getId());
+                pestDTO.setName(pest.getName());
+                pestDTOs.add(pestDTO);
+            }
+            return pestDTOs;
         } catch (HibernateException e){
             throw new NoSuchObjectException();
         }

@@ -1,32 +1,27 @@
 package com.about.java.dto;
 
-
-import com.about.java.models.Pest;
-import java.util.List;
-
 public class PestDTO {
 
-    private List<Pest> pests;
-    private long count;
+    private long id;
+    private String name;
 
-    public PestDTO(List<Pest> pests){
-        setPests(pests);
-        setCount(pests.size());
+    public PestDTO() {
+        id = 0;
+        name = "";
+    }
+    public long getId() {
+        return id;
     }
 
-    public List<Pest> getPests() {
-        return pests;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public void setPests(List<Pest> pests) {
-        this.pests = pests;
+    public String getName() {
+        return name;
     }
 
-    public long getCount() {
-        return count;
-    }
-
-    public void setCount(long count) {
-        this.count = count;
+    public void setName(String name) {
+        this.name = name;
     }
 }

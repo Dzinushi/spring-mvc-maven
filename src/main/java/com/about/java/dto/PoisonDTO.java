@@ -1,32 +1,53 @@
 package com.about.java.dto;
 
-import com.about.java.models.Poison;
-
+import com.about.java.models.Pest;
+import java.util.ArrayList;
 import java.util.List;
+
 
 public class PoisonDTO {
 
-    private List<Poison> poisons;
-    private int count;
+    private long id;
+    private String name;
+    private String type;
+    private List<PestDTO> pestDTOs;
 
-    public PoisonDTO(List<Poison> poisons){
-        setPoisons(poisons);
-        setCount(poisons.size());
+    public PoisonDTO(){
+        id = 0;
+        name = "";
+        type = "";
+        pestDTOs = new ArrayList<PestDTO>();
     }
 
-    public List<Poison> getPoisons() {
-        return poisons;
+    public long getId() {
+        return id;
     }
 
-    public void setPoisons(List<Poison> poisons) {
-        this.poisons = poisons;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public int getCount() {
-        return count;
+    public String getName() {
+        return name;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public List<PestDTO> getPestDTOs() {
+        return pestDTOs;
+    }
+
+    public void setPestDTOs(List<PestDTO> pestDTOs) {
+        this.pestDTOs = pestDTOs;
     }
 }

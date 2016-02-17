@@ -1,7 +1,6 @@
 package com.about.java.controllers;
 
 import com.about.java.dto.TreeDTO;
-import com.about.java.models.Tree;
 import com.about.java.service.exceptions.NoSuchObjectException;
 import com.about.java.service.interfaces.TreeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -24,14 +22,14 @@ public class MainController {
     public ModelAndView mainpage() {
         ModelAndView mav = new ModelAndView("main");
 
-        TreeDTO treeDTO = null;
+        List<TreeDTO> treeDTOs = null;
         try {
-            treeDTO = treeService.get();
+            treeDTOs = treeService.get();
         } catch (NoSuchObjectException e) {
             e.printStackTrace();
         }
 
-        mav.addObject("treeDTO", treeDTO);
+        mav.addObject("trees", treeDTOs);
         return mav;
     }
 

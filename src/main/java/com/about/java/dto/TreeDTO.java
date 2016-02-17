@@ -1,38 +1,83 @@
 package com.about.java.dto;
 
+import com.about.java.models.Poison;
 import com.about.java.models.Tree;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class TreeDTO {
 
-    private List<Tree> trees;
-    private long count;
+    private long id;
+    private String name;
+    private String height;
+    private String describe;
+    private String care;
+    private List<PoisonDTO> poisonDTOs;
 
-    public TreeDTO(Tree tree){
-        trees = new ArrayList<Tree>();
-        trees.add(tree);
-        setCount(trees.size());
+    public TreeDTO(){
+        id = 0;
+        name = "";
+        height = "";
+        describe = "";
+        care = "";
+        poisonDTOs = new ArrayList<PoisonDTO>();
     }
 
-    public TreeDTO(List<Tree> trees){
-        setTrees(trees);
-        setCount(trees.size());
+//    public TreeDTO(Tree tree){
+//        setId(tree.getId());
+//        setName(tree.getName());
+//        setHeight(tree.getHeight());
+//        setDescribe(tree.getDescribe());
+//        setCare(tree.getCare().getDescribe());
+//        setPoisonDTOs(tree.getPoisons());
+//    }
+
+    public String getName() {
+        return name;
     }
 
-    public List<Tree> getTrees() {
-        return trees;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setTrees(List<Tree> trees) {
-        this.trees = trees;
+    public String getHeight() {
+        return height;
     }
 
-    public long getCount() {
-        return count;
+    public void setHeight(String height) {
+        this.height = height;
     }
 
-    public void setCount(long count) {
-        this.count = count;
+    public String getDescribe() {
+        return describe;
+    }
+
+    public void setDescribe(String describe) {
+        this.describe = describe;
+    }
+
+    public String getCare() {
+        return care;
+    }
+
+    public void setCare(String care) {
+        this.care = care;
+    }
+
+    public List<PoisonDTO> getPoisonDTOs() {
+        return poisonDTOs;
+    }
+
+    public void setPoisonDTOs(List<PoisonDTO> poisonDTOs) {
+        this.poisonDTOs = poisonDTOs;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

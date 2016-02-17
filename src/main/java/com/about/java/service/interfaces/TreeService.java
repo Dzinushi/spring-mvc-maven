@@ -10,6 +10,6 @@ public interface TreeService {
     long add(Tree tree) throws ObjectAlreadyExistsException;
     long update(Tree tree) throws NoSuchObjectException;
     TreeDTO get(long id) throws NoSuchObjectException;
-    TreeDTO get() throws NoSuchObjectException;
+    List<TreeDTO> get() throws NoSuchObjectException;
     void delete(long id) throws NoSuchObjectException;
 }

@@ -1,15 +1,20 @@
 package com.about.java.service.implement;
 
 import com.about.java.dao.interfaces.PoisonDAO;
+import com.about.java.dto.PestDTO;
+import com.about.java.dto.PoisonDTO;
+import com.about.java.models.Pest;
 import com.about.java.models.Poison;
 import com.about.java.service.exceptions.NoSuchObjectException;
 import com.about.java.service.exceptions.ObjectAlreadyExistsException;
+import com.about.java.service.interfaces.PestService;
 import com.about.java.service.interfaces.PoisonService;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,6 +22,9 @@ public class PoisonServiceImpl implements PoisonService{
 
     @Autowired
     private PoisonDAO poisonDAO;
+
+    @Autowired
+    private PestService pestService;
 
     @Transactional
     public Long add(Poison poison) throws ObjectAlreadyExistsException {
@@ -43,21 +51,48 @@ public class PoisonServiceImpl implements PoisonService{
     }
 
     @Transactional
-    public Poison get(Long id) throws NoSuchObjectException {
+    public PoisonDTO get(Long id) throws NoSuchObjectException {
         if (id == 0){
             throw new NullPointerException();
         }
         try {
-            return poisonDAO.getPoison(id);
+            Poison poison = poisonDAO.getPoison(id);
+            PoisonDTO poisonDTO = new PoisonDTO();
+            poisonDTO.setId(poison.getId());
+            poisonDTO.setName(poison.getName());
+            poisonDTO.setType(poison.getType());
+
+            List<PestDTO> pestDTOs = new ArrayList<PestDTO>();
+            for (Pest pest : poison.getPests()){
+                pestDTOs.add(pestService.get(pest.getId()));
+            }
+            poisonDTO.setPestDTOs(pestDTOs);
+            return poisonDTO;
+
         } catch (HibernateException e){
             throw new NoSuchObjectException();
         }
     }
 
     @Transactional
-    public List<Poison> get() throws NoSuchObjectException {
+    public List<PoisonDTO> get() throws NoSuchObjectException {
         try {
-            return poisonDAO.getPoison();
+            List<Poison> poisons =  poisonDAO.getPoison();
+            List<PoisonDTO> poisonDTOs = new ArrayList<PoisonDTO>();
+            for (Poison poison : poisons) {
+                PoisonDTO poisonDTO = new PoisonDTO();
+                poisonDTO.setId(poison.getId());
+                poisonDTO.setName(poison.getName());
+                poisonDTO.setType(poison.getType());
+
+                List<PestDTO> pestDTOs = new ArrayList<PestDTO>();
+                for (Pest pest : poison.getPests()){
+                    pestDTOs.add(pestService.get(pest.getId()));
+                }
+                poisonDTO.setPestDTOs(pestDTOs);
+                poisonDTOs.add(poisonDTO);
+            }
+            return poisonDTOs;
         } catch (HibernateException e){
             throw new NoSuchObjectException();
         }
