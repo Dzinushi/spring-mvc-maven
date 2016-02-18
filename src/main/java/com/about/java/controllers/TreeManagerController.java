@@ -26,7 +26,7 @@ public class TreeManagerController {
             e.printStackTrace();
         }
 
-        mav.addObject("treeDTO", treeDTO);
+        mav.addObject("tree", treeDTO);
         return mav;
     }
 }

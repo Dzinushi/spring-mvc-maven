@@ -47,6 +47,10 @@
         </property>
     </bean>
 
+    <!--<mvc:resources mapping="/WEB-INF/**" location="WEB-INF/style/**"-->
+                   <!--cache-period="31556926"/>-->
+
+
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
     <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">

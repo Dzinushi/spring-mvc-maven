@@ -4,8 +4,10 @@
 
 <html>
 <body>
+<c:import url="/WEB-INF/style/table.css"/>
+
 <h2>Garden</h2>
-<table border="1" cellpadding="3" cellspacing="1">
+<table border="1" cellpadding="3" >
     <tr>
         <th>Виды</th>
         <th>Описание</th>
@@ -15,6 +17,7 @@
             <form:form method="post" action="details">
                     <input name="id" type="hidden" value="${tree.id}">
                 <td><input type="submit" value="${tree.name}"></td>
+                <td><input type="text" value="${tree.describe}"></td>
             </form:form>
         </tr>
     </c:forEach>
