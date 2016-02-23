@@ -10,6 +10,7 @@ import com.about.java.models.Poison;
 import com.about.java.models.Tree;
 import com.about.java.service.exceptions.NoSuchObjectException;
 import com.about.java.service.exceptions.ObjectAlreadyExistsException;
+import com.about.java.service.interfaces.CareService;
 import com.about.java.service.interfaces.PoisonService;
 import com.about.java.service.interfaces.TreeService;
 import org.hibernate.HibernateException;
@@ -22,6 +23,9 @@ import java.util.List;
 
 @Service
 public class TreeServiceImpl implements TreeService {
+
+    @Autowired
+    private CareService careService;
 
     @Autowired
     private TreeDAO treeTypesDAO;
@@ -113,6 +117,7 @@ public class TreeServiceImpl implements TreeService {
         }
 
         try{
+            careService.delete(treeTypesDAO.getTree(id).getCare().getId());
             treeTypesDAO.deleteTree(id);
         } catch (HibernateException e){
             throw new NoSuchObjectException();

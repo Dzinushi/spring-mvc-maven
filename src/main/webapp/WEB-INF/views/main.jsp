@@ -9,21 +9,23 @@
 <h2>Garden</h2>
 <table border="1" cellpadding="3" >
     <tr>
-        <th>Виды</th>
-        <th>Описание</th>
+        <th align="center">Виды</th>
     </tr>
     <c:forEach items="${trees}" var="tree">
         <tr>
-            <form:form method="post" action="details">
+            <form:form method="get" action="details/detailsTree">
                     <input name="id" type="hidden" value="${tree.id}">
-                <td><input type="submit" value="${tree.name}"></td>
-                <td><input type="text" value="${tree.describe}"></td>
+                <td align="center"><input type="submit" value="${tree.name}"></td>
+            </form:form>
+            <form:form method="post" action="delete">
+                <input name="id" type="hidden" value="${tree.id}">
+                <td><input type="submit" value="Удалить"></td>
             </form:form>
         </tr>
     </c:forEach>
 </table>
 <h2></h2>
-<form:form method="post" action="add">
+<form:form method="post" action="add/addTree">
     <input type="submit" value="Добавить">
 </form:form>
 </body>

@@ -36,38 +36,16 @@ public class MainController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String delete(@RequestParam(value = "id") Long id){
 
-//        try {
-//            treeTypesService.deleteInvitation(id);
-//        } catch (NoSuchObjectException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            treeService.delete(id);
+        } catch (NoSuchObjectException e) {
+            e.printStackTrace();
+        }
 
         return "redirect:";
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public String edit(@RequestParam(value = "id") Long id,
-                       @RequestParam(value = "type") String type){
-
-        //reeTypesService.updateTree(new Tree(id, type));
-        return "redirect:";
-    }
-
-    @RequestMapping(value = "/add")
+    @RequestMapping(value = "add/addTree", method = RequestMethod.POST)
     public void add(){
-
-    }
-
-    @RequestMapping(value = "/newTree", method = RequestMethod.POST)
-    public String add(@RequestParam(value = "id") Long id,
-                      @RequestParam(value = "type") String type){
-
-//        try {
-//            treeTypesService.add(new Tree(id, type));
-//        } catch (ObjectAlreadyExistsException e) {
-//            e.printStackTrace();
-//        }
-
-        return "redirect:";
     }
 }

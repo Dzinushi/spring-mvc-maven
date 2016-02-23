@@ -16,9 +16,9 @@ public class TreeManagerController {
     @Autowired
     private TreeService treeService;
 
-    @RequestMapping(value = "/details", method = RequestMethod.POST)
+    @RequestMapping(value = "details/detailsTree", method = RequestMethod.GET)
     public ModelAndView details(@RequestParam(value = "id") long id){
-        ModelAndView mav = new ModelAndView("details");
+        ModelAndView mav = new ModelAndView("details/detailsTree");
         TreeDTO treeDTO = null;
         try {
             treeDTO = treeService.get(id);
@@ -28,5 +28,10 @@ public class TreeManagerController {
 
         mav.addObject("tree", treeDTO);
         return mav;
+    }
+
+    @RequestMapping(value = "details/updateTree", method = RequestMethod.POST)
+    public String update(){
+        return "redirect:";
     }
 }

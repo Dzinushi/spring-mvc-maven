@@ -21,7 +21,7 @@ public class Tree {
     @Column(name = "describe")
     private String describe;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "care_id")
     private Care care;
 
