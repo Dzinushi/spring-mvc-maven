@@ -19,7 +19,7 @@ public class CareDAOImpl implements CareDAO{
     private SessionFactory sessionFactory;
 
     public long addCare(Care care) {
-        if (care == null || care.getId() == 0){
+        if (care == null){
             throw new NullPointerException();
         }
         sessionFactory.getCurrentSession().save(care);

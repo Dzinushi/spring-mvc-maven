@@ -27,7 +27,13 @@ public class PestServiceImpl implements PestService{
         }
 
         try{
-            return pestDAO.addPest(pest);
+            // проверка на уникальность
+            if (pestDAO.find(pest.getName())){
+                return null;
+            }
+            else {
+                return pestDAO.addPest(pest);
+            }
         } catch (HibernateException e){
             throw new ObjectAlreadyExistsException();
         }

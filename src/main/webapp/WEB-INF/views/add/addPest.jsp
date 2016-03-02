@@ -6,7 +6,7 @@
 </head>
 <body>
 <h3>Название</h3>
-<form:form method="post" action="../add/newPest">
+<form:form method="post" action="../details/detailsPests">
     <input type="text" name="name">
     <input type="submit" value="Подтвердить">
 </form:form>

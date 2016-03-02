@@ -7,10 +7,13 @@ import com.about.java.service.interfaces.PestService;
 import com.about.java.service.interfaces.PoisonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -36,20 +39,26 @@ public class PoisonController {
     }
 
     @RequestMapping(value = "add/addPoison", method = RequestMethod.POST)
-    public ModelAndView add(){
-        ModelAndView mav = new ModelAndView("add/addPoison");
-        try {
-            List<PestDTO> pestDTOs = pestService.get();
-            mav.addObject("pests", pestDTOs);
-        } catch (NoSuchObjectException e) {
-            e.printStackTrace();
-        }
-
-        return mav;
+    public void add(){
+//        ModelAndView mav = new ModelAndView("add/addPoison");
+//        try {
+//            List<PestDTO> pestDTOs = pestService.get();
+//            mav.addObject("pests", pestDTOs);
+//        } catch (NoSuchObjectException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return mav;
     }
 
-    @RequestMapping(value = "details/applyPoisons", method = RequestMethod.POST)
-    public String apply(){
-        return "redirect:../add/addTree";
+    @RequestMapping(value = "details/applyPoisons")
+    public String apply(@RequestParam(value = "checkedPoisons") List<Long> idPoisons, ModelMap modelMap) throws NoSuchObjectException {
+        List<PoisonDTO> pestDTOs = new ArrayList<PoisonDTO>();
+        for (Long idPoison : idPoisons) {
+            PoisonDTO poisonDTO = poisonService.get(idPoison);
+            pestDTOs.add(poisonDTO);
+        }
+        modelMap.addAttribute("poisons", pestDTOs);
+        return "add/addTree";
     }
 }

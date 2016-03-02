@@ -7,32 +7,34 @@
 </head>
 <body>
 <h4>Выберите необходимые элементы или добавьте новые</h4>
-<table border="1" cellspacing="1" cellpadding="3">
-    <tr>
-        <th align="center">Виды ядов</th>
-        <th align="center">Виды вредителей</th>
-    </tr>
 
-    <c:forEach items="${poisons}" var="poison">
+<form:form method="post" action="../details/applyPoisons">
+    <table border="1" cellspacing="1" cellpadding="3">
         <tr>
-            <td>${poison.name}</td>
+            <th align="center">Виды ядов</th>
+            <th align="center">Виды вредителей</th>
+        </tr>
+
+        <c:forEach items="${poisons}" var="poison">
+            <tr>
+                <td>${poison.name}</td>
                 <td>
                     <c:forEach items="${poison.pestDTOs}" var="pest">
                         ${pest.name}
                         <br>
                     </c:forEach>
                 </td>
-            <td><input type="checkbox" id="${poison.id}"></td>
-        </tr>
-    </c:forEach>
+                <td><input type="checkbox" name="checkedPoisons" value="${poison.id}"></td>
+            </tr>
+        </c:forEach>
+    </table>
+    <br>
+    <input type="submit" value="Подтвердить">
+</form:form>
 
-</table>
-<br>
 <form:form method="post" action="../add/addPoison">
     <input type="submit" value="Добавить">
 </form:form>
-<form:form method="post" action="details/applyPoison">
-    <input type="submit" value="Подтвердить">
-</form:form>
+
 </body>
 </html>

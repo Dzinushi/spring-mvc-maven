@@ -6,28 +6,24 @@
     <h2>Виды вредителей</h2>
 </head>
 <body>
+
 <form:form method="post" action="../details/applyPests">
 
     <table border="1" cellspacing="1" cellpadding="3">
         <c:forEach items="${pests}" var="pest">
             <tr>
                 <td>${pest.name}</td>
-                <td><input type="checkbox" name="checkedPests"></td>
+                <td><input type="checkbox" name="checkedPests" value="${pest.id}"></td>
             </tr>
         </c:forEach>
     </table>
     <br>
-
     <input type="submit" value="Подтвердить">
 </form:form>
+
 <form:form method="post" action="../add/addPest">
     <input type="submit" value="Добавить">
 </form:form>
 
-<%--<%String pests[] = request.getParameterValues("checkBoxPest");--%>
-    <%--if(pests != null){%>--%>
-    <%--<ul><%for(int i=0; i<pests.length; i++){%>--%>
-        <%--<li><%=pests[i]%></li><%}%>--%>
-    <%--</ul><%}%>--%>
 </body>
 </html>

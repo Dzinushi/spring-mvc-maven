@@ -20,7 +20,7 @@ public class TreeDAOImpl implements TreeDAO {
     private SessionFactory sessionFactory;
 
     public long addTree(Tree tree) {
-        if (tree == null || tree.getId() == 0){
+        if (tree == null){
             throw new NullPointerException();
         }
 

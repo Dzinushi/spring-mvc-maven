@@ -20,7 +20,7 @@ public class PoisonDAOImpl implements PoisonDAO{
     private SessionFactory sessionFactory;
 
     public Long addPoison(Poison poison) {
-        if (poison == null || poison.getId() == 0){
+        if (poison == null){
             throw new NullPointerException();
         }
         sessionFactory.getCurrentSession().save(poison);

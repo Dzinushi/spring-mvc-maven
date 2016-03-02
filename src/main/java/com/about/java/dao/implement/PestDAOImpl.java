@@ -17,7 +17,7 @@ public class PestDAOImpl implements PestDAO{
     private SessionFactory sessionFactory;
 
     public Long addPest(Pest pest) {
-        if (pest == null || pest.getId() == 0){
+        if (pest == null){
             throw new NullPointerException();
         }
         sessionFactory.getCurrentSession().save(pest);
@@ -58,5 +58,11 @@ public class PestDAOImpl implements PestDAO{
         }
 
         sessionFactory.getCurrentSession().delete(pest);
+    }
+
+    public boolean find(String name) {
+        Query query = sessionFactory.getCurrentSession().createQuery("from Pest where name=:pestName");
+        query.setParameter("pestName", name);
+        return query.list().size() > 0;
     }
 }

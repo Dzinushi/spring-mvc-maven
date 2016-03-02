@@ -10,8 +10,19 @@
 <h3>Название</h3>
 <input type="text" value="">
 <br>
-<br>
+
 <form:form method="post" action="../details/applyPoisons">
+    <c:if test="${pests.size() > 0}">
+        <h3>Вредители</h3>
+        <table border="1" cellpadding="3" cellspacing="1">
+            <c:forEach items="${pests}" var="pest">
+                <tr>
+                    <td>${pest.name}</td>
+                </tr>
+            </c:forEach>
+        </table>
+    </c:if>
+    <br>
     <input type="submit" value="Подтвердить">
 </form:form>
 <form:form method="get" action="../details/detailsPests">

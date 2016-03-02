@@ -12,4 +12,5 @@ public interface PestDAO {
     Pest getPest(Long id);
     List<Pest> getPest();
     void deletePest(Long id) throws NoSuchObjectException;
+    boolean find(String name);
 }
