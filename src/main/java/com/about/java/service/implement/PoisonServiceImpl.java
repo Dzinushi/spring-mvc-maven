@@ -27,23 +27,30 @@ public class PoisonServiceImpl implements PoisonService{
     private PestService pestService;
 
     @Transactional
-    public Long add(Poison poison) throws ObjectAlreadyExistsException {
-        if (poison == null){
+    public Long add(PoisonDTO poisonDTO) throws ObjectAlreadyExistsException {
+        if (poisonDTO == null){
             throw new NullPointerException();
         }
         try {
-            return poisonDAO.addPoison(poison);
+            if(poisonDAO.find(poisonDTO.getName())){
+                return null;
+            }
+            else {
+                Poison poison = toPoison(poisonDTO);
+                return poisonDAO.addPoison(poison);
+            }
         } catch (HibernateException e){
             throw new ObjectAlreadyExistsException();
         }
     }
 
     @Transactional
-    public Long update(Poison poison) throws NoSuchObjectException {
-        if (poison == null){
+    public Long update(PoisonDTO poisonDTO) throws NoSuchObjectException {
+        if (poisonDTO == null){
             throw new NullPointerException();
         }
         try {
+            Poison poison = toPoison(poisonDTO);
             return poisonDAO.updatePoison(poison);
         } catch (HibernateException e){
             throw new NoSuchObjectException();
@@ -108,5 +115,20 @@ public class PoisonServiceImpl implements PoisonService{
         } catch (HibernateException e){
             throw new NoSuchObjectException();
         }
+    }
+    
+    public Poison toPoison(PoisonDTO poisonDTO){
+        Poison poison = new Poison();
+        poison.setName(poisonDTO.getName());
+        List<Pest> pests = new ArrayList<Pest>();
+        for (int i = 0; i < poisonDTO.getPestDTOs().size(); i++) {
+            PestDTO pestDTO = poisonDTO.getPestDTOs().get(i);
+            Pest pest = new Pest();
+            pest.setName(pestDTO.getName());
+            pests.add(pest);
+        }
+        poison.setPests(pests);
+
+        return poison;
     }
 }

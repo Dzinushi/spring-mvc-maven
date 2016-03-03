@@ -3,6 +3,7 @@ package com.about.java.controllers;
 import com.about.java.dto.PestDTO;
 import com.about.java.dto.PoisonDTO;
 import com.about.java.service.exceptions.NoSuchObjectException;
+import com.about.java.service.exceptions.ObjectAlreadyExistsException;
 import com.about.java.service.interfaces.PestService;
 import com.about.java.service.interfaces.PoisonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,15 +41,33 @@ public class PoisonController {
 
     @RequestMapping(value = "add/addPoison", method = RequestMethod.POST)
     public void add(){
-//        ModelAndView mav = new ModelAndView("add/addPoison");
-//        try {
-//            List<PestDTO> pestDTOs = pestService.get();
-//            mav.addObject("pests", pestDTOs);
-//        } catch (NoSuchObjectException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return mav;
+
+    }
+
+    @RequestMapping(value = "details/detailsPoisons")
+    public String add(@RequestParam("name") String name,
+                      @RequestParam("idPests") List<Long> idPests,
+                      ModelMap modelMap) throws NoSuchObjectException {
+        PoisonDTO poison = new PoisonDTO();
+        poison.setName(name);
+
+        List<PestDTO> pestDTOs = new ArrayList<PestDTO>();
+        for (Long idPest : idPests) {
+            PestDTO pestDTO = pestService.get(idPest);
+            pestDTOs.add(pestDTO);
+        }
+
+        poison.setPestDTOs(pestDTOs);
+
+        try {
+            poisonService.add(poison);
+            List<PoisonDTO> poisonDTOs = poisonService.get();
+            modelMap.addAttribute("poisons", poisonDTOs);
+        } catch (ObjectAlreadyExistsException e) {
+            e.printStackTrace();
+        }
+
+        return "details/detailsPoisons";
     }
 
     @RequestMapping(value = "details/applyPoisons")
@@ -61,4 +80,6 @@ public class PoisonController {
         modelMap.addAttribute("poisons", pestDTOs);
         return "add/addTree";
     }
+
+
 }

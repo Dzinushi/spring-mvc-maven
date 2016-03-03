@@ -1,11 +1,9 @@
 package com.about.java.service.implement;
 
-import com.about.java.dao.interfaces.PestDAO;
 import com.about.java.dao.interfaces.TreeDAO;
-import com.about.java.dto.PestDTO;
 import com.about.java.dto.PoisonDTO;
 import com.about.java.dto.TreeDTO;
-import com.about.java.models.Pest;
+import com.about.java.models.Care;
 import com.about.java.models.Poison;
 import com.about.java.models.Tree;
 import com.about.java.service.exceptions.NoSuchObjectException;
@@ -33,13 +31,32 @@ public class TreeServiceImpl implements TreeService {
     @Autowired
     private PoisonService poisonService;
 
+    public Tree toTree(TreeDTO treeDTO){
+        Tree tree = new Tree();
+        tree.setName(treeDTO.getName());
+        tree.setHeight(treeDTO.getHeight());
+        tree.setDescribe(treeDTO.getDescribe());
+        Care care = new Care();
+        care.setDescribe(treeDTO.getCare());
+        tree.setCare(care);
+
+        List<Poison> poisons = new ArrayList<Poison>();
+        for (int i = 0; i < treeDTO.getPoisonDTOs().size(); i++) {
+            Poison poison = poisonService.toPoison(treeDTO.getPoisonDTOs().get(i));
+            poisons.add(poison);
+        }
+        tree.setPoisons(poisons);
+        return tree;
+    }
+
     @Transactional
-    public long add(Tree tree) throws ObjectAlreadyExistsException {
-        if (tree == null){
+    public long add(TreeDTO treeDTO) throws ObjectAlreadyExistsException {
+        if (treeDTO == null){
             throw new NullPointerException();
         }
 
         try{
+            Tree tree = toTree(treeDTO);
             return treeTypesDAO.addTree(tree);
         } catch (HibernateException e){
             throw new ObjectAlreadyExistsException();
@@ -47,11 +64,12 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Transactional
-    public long update(Tree tree) throws NoSuchObjectException {
-        if (tree.getId() == null){
+    public long update(TreeDTO treeDTO) throws NoSuchObjectException {
+        if (treeDTO.getId() == 0){
             throw new NullPointerException();
         }
         try{
+            Tree tree = toTree(treeDTO);
             return treeTypesDAO.updateTree(tree);
         } catch (HibernateException e){
             throw new NoSuchObjectException();

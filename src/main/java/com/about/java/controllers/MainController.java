@@ -44,8 +44,4 @@ public class MainController {
 
         return "redirect:";
     }
-
-    @RequestMapping(value = "add/addTree", method = RequestMethod.POST)
-    public void add(){
-    }
 }

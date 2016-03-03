@@ -62,4 +62,10 @@ public class PoisonDAOImpl implements PoisonDAO{
         }
         sessionFactory.getCurrentSession().delete(poison);
     }
+
+    public boolean find(String name) {
+        Query query = sessionFactory.getCurrentSession().createQuery("from Poison where name=:poisonName");
+        query.setParameter("poisonName", name);
+        return query.list().size() > 0;
+    }
 }

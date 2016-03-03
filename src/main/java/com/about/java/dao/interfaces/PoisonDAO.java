@@ -13,4 +13,5 @@ public interface PoisonDAO {
     Poison getPoison(Long id);
     List<Poison> getPoison();
     void deletePoison(Long id) throws NoSuchObjectException;
+    boolean find(String name);
 }

@@ -17,7 +17,7 @@
                     <input name="id" type="hidden" value="${tree.id}">
                 <td align="center"><input type="submit" value="${tree.name}"></td>
             </form:form>
-            <form:form method="post" action="delete">
+            <form:form action="delete">
                 <input name="id" type="hidden" value="${tree.id}">
                 <td><input type="submit" value="Удалить"></td>
             </form:form>
