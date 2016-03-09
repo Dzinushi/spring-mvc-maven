@@ -9,8 +9,8 @@ import com.about.java.service.exceptions.ObjectAlreadyExistsException;
 import java.util.List;
 
 public interface PestService {
-    Long add(Pest pest) throws ObjectAlreadyExistsException;
-    Long update(Pest pest) throws NoSuchObjectException;
+    Long add(PestDTO pest) throws ObjectAlreadyExistsException;
+    Long update(PestDTO pest) throws NoSuchObjectException;
     PestDTO get(Long id) throws NoSuchObjectException;
     List<PestDTO> get() throws NoSuchObjectException;
     void delete(Long id) throws NoSuchObjectException;

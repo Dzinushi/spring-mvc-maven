@@ -3,8 +3,6 @@ package com.about.java.dao.implement;
 import com.about.java.dao.interfaces.CareDAO;
 import com.about.java.models.Care;
 import com.about.java.service.exceptions.NoSuchObjectException;
-import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,7 @@ public class CareDAOImpl implements CareDAO{
     @Autowired
     private SessionFactory sessionFactory;
 
-    public long addCare(Care care) {
+    public Long addCare(Care care) {
         if (care == null){
             throw new NullPointerException();
         }
@@ -26,7 +24,7 @@ public class CareDAOImpl implements CareDAO{
         return care.getId();
     }
 
-    public long updateCare(Care care) throws NoSuchObjectException {
+    public Long updateCare(Care care) throws NoSuchObjectException {
         if (care == null || care.getId() == 0){
             throw new NullPointerException();
         }
@@ -34,7 +32,7 @@ public class CareDAOImpl implements CareDAO{
         return care.getId();
     }
 
-    public Care getCare(long id) {
+    public Care getCare(Long id) {
         if (id == 0){
             throw new NullPointerException();
         }
@@ -46,7 +44,7 @@ public class CareDAOImpl implements CareDAO{
         return query.list();
     }
 
-    public void delete(long id) throws NoSuchObjectException {
+    public void delete(Long id) throws NoSuchObjectException {
         if (id == 0){
             throw new NullPointerException();
         }
@@ -56,5 +54,11 @@ public class CareDAOImpl implements CareDAO{
             throw new NoSuchObjectException();
         }
         sessionFactory.getCurrentSession().delete(foundTree);
+    }
+
+    public boolean find(String describe) {
+        Query query = sessionFactory.getCurrentSession().createQuery("from Care where describe=:describe");
+        query.setParameter("describe", describe);
+        return query.list().size() > 0;
     }
 }

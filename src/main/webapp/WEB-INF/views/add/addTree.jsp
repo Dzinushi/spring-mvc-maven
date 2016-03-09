@@ -41,7 +41,7 @@
     <input type="submit" value="Подтвердить">
 </form:form>
 
-<form:form method="get" action="../details/detailsPoison">
+<form:form method="get" action="../details/detailsPoisons">
     <input type="submit" value="Выбрать отраву">
 </form:form>
 

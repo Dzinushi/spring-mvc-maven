@@ -3,7 +3,6 @@ package com.about.java.dao.interfaces;
 
 import com.about.java.models.Poison;
 import com.about.java.service.exceptions.NoSuchObjectException;
-import javafx.geometry.Pos;
 
 import java.util.List;
 

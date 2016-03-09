@@ -1,9 +1,13 @@
 package com.about.java.controllers;
 
+import com.about.java.dao.interfaces.CareDAO;
+import com.about.java.dto.CareDTO;
 import com.about.java.dto.PoisonDTO;
 import com.about.java.dto.TreeDTO;
+import com.about.java.models.Care;
 import com.about.java.service.exceptions.NoSuchObjectException;
 import com.about.java.service.exceptions.ObjectAlreadyExistsException;
+import com.about.java.service.interfaces.CareService;
 import com.about.java.service.interfaces.PoisonService;
 import com.about.java.service.interfaces.TreeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +22,9 @@ import java.util.List;
 
 @Controller
 public class TreeManagerController {
+
+    @Autowired
+    private CareService careService;
 
     @Autowired
     private TreeService treeService;
@@ -58,7 +65,16 @@ public class TreeManagerController {
         treeDTO.setName(name);
         treeDTO.setHeight(height);
         treeDTO.setDescribe(describe);
-        treeDTO.setCare(care);
+
+        CareDTO careDTO = new CareDTO();
+        careDTO.setDescribe(care);
+        try {
+            Long idCare = careService.add(careDTO);
+            careDTO.setId(idCare);
+            treeDTO.setCareDTO(careDTO);
+        } catch (ObjectAlreadyExistsException e) {
+            e.printStackTrace();
+        }
 
         List<PoisonDTO> poisonDTOs = new ArrayList<PoisonDTO>();
         for (Long idPoison : idPoisons) {

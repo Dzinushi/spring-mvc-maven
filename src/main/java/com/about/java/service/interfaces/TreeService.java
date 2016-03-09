@@ -7,10 +7,10 @@ import com.about.java.service.exceptions.ObjectAlreadyExistsException;
 import java.util.List;
 
 public interface TreeService {
-    long add(TreeDTO tree) throws ObjectAlreadyExistsException;
-    long update(TreeDTO tree) throws NoSuchObjectException;
-    TreeDTO get(long id) throws NoSuchObjectException;
+    Long add(TreeDTO tree) throws ObjectAlreadyExistsException;
+    Long update(TreeDTO tree) throws NoSuchObjectException;
+    TreeDTO get(Long id) throws NoSuchObjectException;
     List<TreeDTO> get() throws NoSuchObjectException;
-    void delete(long id) throws NoSuchObjectException;
+    void delete(Long id) throws NoSuchObjectException;
     public Tree toTree(TreeDTO treeDTO);
 }

@@ -41,11 +41,17 @@ public class PestContoller {
 
     }
 
+    @RequestMapping(value = "delete/deletePest", method = RequestMethod.POST)
+    public String delete(@RequestParam(value = "id") Long id) throws NoSuchObjectException {
+        pestService.delete(id);
+        return "redirect:../details/detailsPests";
+    }
+
     @RequestMapping(value = "details/detailsPests", method = RequestMethod.POST)
     public String add(@RequestParam(value = "name") String name, ModelMap modelMap) throws ObjectAlreadyExistsException {
-        Pest pest = new Pest();
-        pest.setName(name);
-        pestService.add(pest);
+        PestDTO pestDTO = new PestDTO();
+        pestDTO.setName(name);
+        pestService.add(pestDTO);
 
         try {
             List<PestDTO> pestDTOList = pestService.get();

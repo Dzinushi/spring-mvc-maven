@@ -1,14 +1,14 @@
 package com.about.java.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PestDTO {
 
-    private long id;
+    private Long id;
     private String name;
+    private List<PoisonDTO> poisonDTOs;
 
-    public PestDTO() {
-        id = 0;
-        name = "";
-    }
     public long getId() {
         return id;
     }
@@ -23,5 +23,13 @@ public class PestDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<PoisonDTO> getPoisonDTOs() {
+        return poisonDTOs;
+    }
+
+    public void setPoisonDTOs(List<PoisonDTO> poisonDTOs) {
+        this.poisonDTOs = poisonDTOs;
     }
 }

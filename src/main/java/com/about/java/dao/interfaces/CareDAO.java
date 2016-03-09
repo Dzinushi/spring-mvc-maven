@@ -7,9 +7,10 @@ import com.about.java.service.exceptions.NoSuchObjectException;
 import java.util.List;
 
 public interface CareDAO {
-    long addCare(Care care);
-    long updateCare(Care care) throws NoSuchObjectException;
-    Care getCare(long id);
+    Long addCare(Care care);
+    Long updateCare(Care care) throws NoSuchObjectException;
+    Care getCare(Long id);
     List<Care> getCare();
-    void delete(long id) throws NoSuchObjectException;
+    void delete(Long id) throws NoSuchObjectException;
+    boolean find(String describe);
 }

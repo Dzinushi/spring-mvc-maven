@@ -2,6 +2,8 @@ package com.about.java.controllers;
 
 import com.about.java.dto.TreeDTO;
 import com.about.java.service.exceptions.NoSuchObjectException;
+import com.about.java.service.exceptions.ObjectAlreadyExistsException;
+import com.about.java.service.interfaces.SaveService;
 import com.about.java.service.interfaces.TreeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,8 +20,23 @@ public class MainController {
     @Autowired
     private TreeService treeService;
 
+    @Autowired
+    private SaveService saveService;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView mainpage() {
+
+        // Создание тестовых данных
+        try {
+            saveService.addStaticCare();
+            saveService.addStaticTree();
+            saveService.addStaticPoison();
+            saveService.addStaticPest();
+        } catch (ObjectAlreadyExistsException e) {
+            e.printStackTrace();
+        }
+
+        // Получение всех видов деревьев из таблицы
         ModelAndView mav = new ModelAndView("main");
 
         List<TreeDTO> treeDTOs = null;

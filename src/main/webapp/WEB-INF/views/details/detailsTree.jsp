@@ -8,7 +8,7 @@ ${tree.height}
 <h3>Описание</h3>
 ${tree.describe}
 <h3>Уход</h3>
-${tree.care}
+${tree.careDTO.describe}
 <h3>Отрава для вредителей</h3>
 <table border="1" cellspacing="1" cellpadding="3">
     <th align="center">Вид</th>

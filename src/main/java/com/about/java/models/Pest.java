@@ -8,24 +8,27 @@ import java.util.List;
 public class Pest {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", unique = true)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", length = 50)
     private String name;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinTable(name = "poison_has_pests",
             joinColumns = {@JoinColumn(name = "pests_id")},
             inverseJoinColumns = {@JoinColumn(name = "poison_id")})
     private List<Poison> poisons;
 
-    public long getId() {
+    public Pest()
+    {}
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

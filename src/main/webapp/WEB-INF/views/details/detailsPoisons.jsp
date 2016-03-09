@@ -24,6 +24,10 @@
                         <br>
                     </c:forEach>
                 </td>
+                <form:form method="post" action="../delete/deletePoison">
+                    <input type="hidden" name="id" value="${poison.id}">
+                    <td><input type="submit" value="Удалить"></td>
+                </form:form>
                 <td><input type="checkbox" name="checkedPoisons" value="${poison.id}"></td>
             </tr>
         </c:forEach>
@@ -33,6 +37,7 @@
 </form:form>
 
 <form:form method="post" action="../add/addPoison">
+    <br>
     <input type="submit" value="Добавить">
 </form:form>
 

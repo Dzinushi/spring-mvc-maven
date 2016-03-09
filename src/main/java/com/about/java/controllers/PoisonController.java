@@ -27,7 +27,7 @@ public class PoisonController {
     @Autowired
     private PestService pestService;
 
-    @RequestMapping(value = "details/detailsPoison", method = RequestMethod.GET)
+    @RequestMapping(value = "details/detailsPoisons", method = RequestMethod.GET)
     public ModelAndView get(){
         ModelAndView mav = new ModelAndView("details/detailsPoisons");
         try {
@@ -44,7 +44,13 @@ public class PoisonController {
 
     }
 
-    @RequestMapping(value = "details/detailsPoisons")
+    @RequestMapping(value = "delete/deletePoison", method = RequestMethod.POST)
+    public String delete(@RequestParam(value = "id") Long id) throws NoSuchObjectException {
+        poisonService.delete(id);
+        return "redirect:../details/detailsPoisons";
+    }
+
+    @RequestMapping(value = "details/detailsPoisons", method = RequestMethod.POST)
     public String add(@RequestParam("name") String name,
                       @RequestParam("idPests") List<Long> idPests,
                       ModelMap modelMap) throws NoSuchObjectException {
@@ -80,6 +86,4 @@ public class PoisonController {
         modelMap.addAttribute("poisons", pestDTOs);
         return "add/addTree";
     }
-
-
 }

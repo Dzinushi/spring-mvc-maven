@@ -1,11 +1,8 @@
 package com.about.java.dao.implement;
 
-
 import com.about.java.dao.interfaces.PoisonDAO;
 import com.about.java.models.Poison;
 import com.about.java.service.exceptions.NoSuchObjectException;
-import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +18,7 @@ public class PoisonDAOImpl implements PoisonDAO{
 
     public Long addPoison(Poison poison) {
         if (poison == null){
+            System.out.println();
             throw new NullPointerException();
         }
         sessionFactory.getCurrentSession().save(poison);

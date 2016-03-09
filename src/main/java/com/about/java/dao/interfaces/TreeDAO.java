@@ -6,9 +6,10 @@ import com.about.java.service.exceptions.NoSuchObjectException;
 import java.util.List;
 
 public interface TreeDAO {
-    long addTree(Tree tree);
-    long updateTree(Tree tree) throws NoSuchObjectException;
-    Tree getTree(long id);
+    Long addTree(Tree tree);
+    Long updateTree(Tree tree) throws NoSuchObjectException;
+    Tree getTree(Long id);
     List getTree();
-    void deleteTree(long id) throws NoSuchObjectException;
+    void deleteTree(Long id) throws NoSuchObjectException;
+    boolean find(String name);
 }

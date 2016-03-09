@@ -1,5 +1,7 @@
 package com.about.java.models;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -8,24 +10,24 @@ import java.util.List;
 public class Tree {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", length = 20)
     private String name;
 
     @Column(name = "height")
     private String height;
 
-    @Column(name = "describe")
+    @Column(name = "describe", length = 5000)
     private String describe;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "care_id")
     private Care care;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinTable(name = "tree_has_poison",
             joinColumns = {@JoinColumn(name = "tree_id")},
             inverseJoinColumns = {@JoinColumn(name = "poison_id")})

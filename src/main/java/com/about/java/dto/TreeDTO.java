@@ -1,37 +1,16 @@
 package com.about.java.dto;
 
-import com.about.java.models.Poison;
-import com.about.java.models.Tree;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TreeDTO {
 
-    private long id;
+    private Long id;
     private String name;
     private String height;
     private String describe;
-    private String care;
+    private CareDTO careDTO;
     private List<PoisonDTO> poisonDTOs;
-
-    public TreeDTO(){
-        id = 0;
-        name = "";
-        height = "";
-        describe = "";
-        care = "";
-        poisonDTOs = new ArrayList<PoisonDTO>();
-    }
-
-//    public TreeDTO(Tree tree){
-//        setId(tree.getId());
-//        setName(tree.getName());
-//        setHeight(tree.getHeight());
-//        setDescribe(tree.getDescribe());
-//        setCare(tree.getCare().getDescribe());
-//        setPoisonDTOs(tree.getPoisons());
-//    }
 
     public String getName() {
         return name;
@@ -57,14 +36,6 @@ public class TreeDTO {
         this.describe = describe;
     }
 
-    public String getCare() {
-        return care;
-    }
-
-    public void setCare(String care) {
-        this.care = care;
-    }
-
     public List<PoisonDTO> getPoisonDTOs() {
         return poisonDTOs;
     }
@@ -73,11 +44,19 @@ public class TreeDTO {
         this.poisonDTOs = poisonDTOs;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    public CareDTO getCareDTO() {
+        return careDTO;
+    }
+
+    public void setCareDTO(CareDTO careDTO) {
+        this.careDTO = careDTO;
     }
 }

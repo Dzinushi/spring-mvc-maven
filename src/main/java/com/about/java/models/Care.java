@@ -1,5 +1,7 @@
 package com.about.java.models;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -7,26 +9,39 @@ import javax.persistence.*;
 public class Care {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", unique = true)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
-    @Column(name = "describe")
-    private String describe;
+    @OneToOne(mappedBy = "care", fetch = FetchType.LAZY)
+    private Tree tree;
 
-    public long getId() {
+//    @Column(name = "describe", length = 5000)
+//    private String describe;
+
+    public Care(){}
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getDescribe() {
-        return describe;
+    public Tree getTree() {
+        return tree;
     }
 
-    public void setDescribe(String describe) {
-        this.describe = describe;
+    public void setTree(Tree tree) {
+        this.tree = tree;
     }
+
+//    public String getDescribe() {
+//        return describe;
+//    }
+//
+//    public void setDescribe(String describe) {
+//        this.describe = describe;
+//    }
 }

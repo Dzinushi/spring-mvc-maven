@@ -3,12 +3,15 @@ package com.about.java.service.implement;
 import com.about.java.dao.interfaces.PoisonDAO;
 import com.about.java.dto.PestDTO;
 import com.about.java.dto.PoisonDTO;
+import com.about.java.dto.TreeDTO;
 import com.about.java.models.Pest;
 import com.about.java.models.Poison;
+import com.about.java.models.Tree;
 import com.about.java.service.exceptions.NoSuchObjectException;
 import com.about.java.service.exceptions.ObjectAlreadyExistsException;
 import com.about.java.service.interfaces.PestService;
 import com.about.java.service.interfaces.PoisonService;
+import com.about.java.service.interfaces.TreeService;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,9 @@ import java.util.List;
 
 @Service
 public class PoisonServiceImpl implements PoisonService{
+
+    @Autowired
+    private TreeService treeService;
 
     @Autowired
     private PoisonDAO poisonDAO;
@@ -119,15 +125,30 @@ public class PoisonServiceImpl implements PoisonService{
     
     public Poison toPoison(PoisonDTO poisonDTO){
         Poison poison = new Poison();
+        poison.setId(poisonDTO.getId());
         poison.setName(poisonDTO.getName());
-        List<Pest> pests = new ArrayList<Pest>();
-        for (int i = 0; i < poisonDTO.getPestDTOs().size(); i++) {
-            PestDTO pestDTO = poisonDTO.getPestDTOs().get(i);
-            Pest pest = new Pest();
-            pest.setName(pestDTO.getName());
-            pests.add(pest);
+
+        if (poisonDTO.getPestDTOs() != null){
+            List<Pest> pests = new ArrayList<Pest>();
+            for (int i = 0; i < poisonDTO.getPestDTOs().size(); i++) {
+                PestDTO pestDTO = poisonDTO.getPestDTOs().get(i);
+                Pest pest = new Pest();
+                pest.setId(pestDTO.getId());
+                pest.setName(pestDTO.getName());
+                pests.add(pest);
+            }
+            poison.setPests(pests);
         }
-        poison.setPests(pests);
+
+        if (poisonDTO.getTreeDTOs() != null){
+            List<Tree> trees = new ArrayList<Tree>();
+            for (int i = 0; i < poisonDTO.getTreeDTOs().size(); i++) {
+                TreeDTO treeDTO = poisonDTO.getTreeDTOs().get(i);
+                Tree tree = treeService.toTree(treeDTO);
+                trees.add(tree);
+            }
+            poison.setTrees(trees);
+        }
 
         return poison;
     }

@@ -1,6 +1,7 @@
 package com.about.java.service.implement;
 
 import com.about.java.dao.interfaces.TreeDAO;
+import com.about.java.dto.CareDTO;
 import com.about.java.dto.PoisonDTO;
 import com.about.java.dto.TreeDTO;
 import com.about.java.models.Care;
@@ -33,28 +34,37 @@ public class TreeServiceImpl implements TreeService {
 
     public Tree toTree(TreeDTO treeDTO){
         Tree tree = new Tree();
+        tree.setId(treeDTO.getId());
         tree.setName(treeDTO.getName());
         tree.setHeight(treeDTO.getHeight());
         tree.setDescribe(treeDTO.getDescribe());
+
+        if (treeDTO.getPoisonDTOs() != null){
+            List<Poison> poisons = new ArrayList<Poison>();
+            for (int i = 0; i < treeDTO.getPoisonDTOs().size(); i++) {
+                Poison poison = poisonService.toPoison(treeDTO.getPoisonDTOs().get(i));
+                poisons.add(poison);
+            }
+            tree.setPoisons(poisons);
+        }
+
         Care care = new Care();
-        care.setDescribe(treeDTO.getCare());
+        care.setId(treeDTO.getCareDTO().getId());
+        care.setTree(tree);
+//        care.setDescribe(treeDTO.getCareDTO().getDescribe());
         tree.setCare(care);
 
-        List<Poison> poisons = new ArrayList<Poison>();
-        for (int i = 0; i < treeDTO.getPoisonDTOs().size(); i++) {
-            Poison poison = poisonService.toPoison(treeDTO.getPoisonDTOs().get(i));
-            poisons.add(poison);
-        }
-        tree.setPoisons(poisons);
         return tree;
     }
 
     @Transactional
-    public long add(TreeDTO treeDTO) throws ObjectAlreadyExistsException {
+    public Long add(TreeDTO treeDTO) throws ObjectAlreadyExistsException {
         if (treeDTO == null){
             throw new NullPointerException();
         }
-
+        if (treeTypesDAO.find(treeDTO.getName())){
+            return null;
+        }
         try{
             Tree tree = toTree(treeDTO);
             return treeTypesDAO.addTree(tree);
@@ -64,7 +74,7 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Transactional
-    public long update(TreeDTO treeDTO) throws NoSuchObjectException {
+    public Long update(TreeDTO treeDTO) throws NoSuchObjectException {
         if (treeDTO.getId() == 0){
             throw new NullPointerException();
         }
@@ -77,7 +87,7 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Transactional
-    public TreeDTO get(long id) throws NoSuchObjectException{
+    public TreeDTO get(Long id) throws NoSuchObjectException{
         if (id == 0){
             throw new NullPointerException();
         }
@@ -88,7 +98,12 @@ public class TreeServiceImpl implements TreeService {
             treeDTO.setName(tree.getName());
             treeDTO.setHeight(tree.getHeight());
             treeDTO.setDescribe(tree.getDescribe());
-            treeDTO.setCare(tree.getCare().getDescribe());
+
+            Care care = tree.getCare();
+            CareDTO careDTO = new CareDTO();
+            careDTO.setId(care.getId());
+//            careDTO.setDescribe(care.getDescribe());
+            treeDTO.setCareDTO(careDTO);
 
             List<PoisonDTO> poisonDTOs = new ArrayList<PoisonDTO>();
             for (Poison poison : tree.getPoisons()) {
@@ -113,7 +128,12 @@ public class TreeServiceImpl implements TreeService {
                 treeDTO.setName(tree.getName());
                 treeDTO.setHeight(tree.getHeight());
                 treeDTO.setDescribe(tree.getDescribe());
-                treeDTO.setCare(tree.getCare().getDescribe());
+
+                Care care = tree.getCare();
+                CareDTO careDTO = new CareDTO();
+                careDTO.setId(care.getId());
+//                careDTO.setDescribe(care.getDescribe());
+                treeDTO.setCareDTO(careDTO);
 
                 List<PoisonDTO> poisonDTOs = new ArrayList<PoisonDTO>();
                 for (Poison poison : tree.getPoisons()) {
@@ -129,7 +149,7 @@ public class TreeServiceImpl implements TreeService {
     }
 
     @Transactional
-    public void delete(long id) throws NoSuchObjectException {
+    public void delete(Long id) throws NoSuchObjectException {
         if (id == 0){
             throw new NullPointerException();
         }

@@ -23,8 +23,8 @@
         <property name="driverClassName" value="com.mysql.jdbc.Driver" />
         <property name="url"
                   value="jdbc:mysql://localhost:3306/garden_model" />
-        <property name="username" value="I" />
-        <property name="password" value="qzwxas46829173" />
+        <property name="username" value="root" />
+        <property name="password" value="root" />
     </bean>
 
     <bean id="hibernate4AnnotatedSessionFactory"
@@ -42,7 +42,7 @@
             <props>
                 <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
                 <prop key="hibernate.show_sql">true</prop>
-                <!--<prop key="hibernate.hbm2ddl.auto">update</prop>-->
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
             </props>
         </property>
     </bean>
