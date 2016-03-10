@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PestDAO {
     Long addPest(Pest pest);
-    Long updatePest(Pest pest);
+    Long updatePest(Pest pest) throws NoSuchObjectException;
     Pest getPest(Long id);
     List<Pest> getPest();
     void deletePest(Long id) throws NoSuchObjectException;

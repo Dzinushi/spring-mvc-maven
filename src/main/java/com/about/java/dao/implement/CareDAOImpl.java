@@ -28,8 +28,15 @@ public class CareDAOImpl implements CareDAO{
         if (care == null || care.getId() == 0){
             throw new NullPointerException();
         }
-        sessionFactory.getCurrentSession().update(care);
-        return care.getId();
+        Care foundCare = (Care) sessionFactory.getCurrentSession().get(Care.class, care.getId());
+        if (foundCare != null){
+            foundCare.copy(care);
+            sessionFactory.getCurrentSession().update(foundCare);
+            return foundCare.getId();
+        }
+        else {
+            throw new NoSuchObjectException();
+        }
     }
 
     public Care getCare(Long id) {

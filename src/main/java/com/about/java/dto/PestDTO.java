@@ -1,6 +1,5 @@
 package com.about.java.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PestDTO {
@@ -9,11 +8,11 @@ public class PestDTO {
     private String name;
     private List<PoisonDTO> poisonDTOs;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

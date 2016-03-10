@@ -18,24 +18,29 @@ public class PoisonDAOImpl implements PoisonDAO{
 
     public Long addPoison(Poison poison) {
         if (poison == null){
-            System.out.println();
             throw new NullPointerException();
         }
-        sessionFactory.getCurrentSession().save(poison);
+        try {
+            sessionFactory.getCurrentSession().save(poison);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         return poison.getId();
     }
 
-    public Long updatePoison(Poison poison) {
+    public Long updatePoison(Poison poison) throws NoSuchObjectException {
         if (poison == null || poison.getId() == 0){
             throw new NullPointerException();
         }
-        Poison updatePoison = (Poison) sessionFactory.getCurrentSession().get(Poison.class, poison.getId());
-        updatePoison.setName(poison.getName());
-        updatePoison.setTrees(poison.getTrees());
-        updatePoison.setPests(poison.getPests());
-        updatePoison.setType(poison.getType());
-        sessionFactory.getCurrentSession().update(updatePoison);
-        return updatePoison.getId();
+        Poison foundPoison = (Poison) sessionFactory.getCurrentSession().get(Poison.class, poison.getId());
+        if (foundPoison != null){
+            foundPoison.copy(poison);
+            sessionFactory.getCurrentSession().update(foundPoison);
+            return foundPoison.getId();
+        }
+        else {
+            throw new NoSuchObjectException();
+        }
     }
 
     public Poison getPoison(Long id) {

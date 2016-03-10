@@ -24,15 +24,19 @@ public class PestDAOImpl implements PestDAO{
         return pest.getId();
     }
 
-    public Long updatePest(Pest pest) {
+    public Long updatePest(Pest pest) throws NoSuchObjectException {
         if (pest == null || pest.getId() == 0){
             throw new NullPointerException();
         }
-        Pest updatePest = (Pest) sessionFactory.getCurrentSession().get(Pest.class, pest.getId());
-        updatePest.setName(pest.getName());
-        updatePest.setPoisons(pest.getPoisons());
-        sessionFactory.getCurrentSession().update(updatePest);
-        return updatePest.getId();
+        Pest foundPest = (Pest) sessionFactory.getCurrentSession().get(Pest.class, pest.getId());
+        if (foundPest != null){
+            foundPest.copy(pest);
+            sessionFactory.getCurrentSession().update(foundPest);
+            return foundPest.getId();
+        }
+        else {
+            throw new NoSuchObjectException();
+        }
     }
 
     public Pest getPest(Long id) {

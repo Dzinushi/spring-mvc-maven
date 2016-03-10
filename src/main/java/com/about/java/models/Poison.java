@@ -1,6 +1,9 @@
 package com.about.java.models;
 
+import com.sun.istack.internal.NotNull;
+
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -8,20 +11,20 @@ import java.util.List;
 public class Poison {
 
     @Id
-    @Column(name = "id", unique = true)
+    @Column(name = "id", unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "name", length = 50)
+    @NotNull
+    @Size(max = 50)
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "type", length = 20)
-    private String type;
+//    @Size(max = 20)
+//    @Column(name = "type")
+//    private String type;
 
-    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinTable(name = "tree_has_poison",
-            joinColumns = {@JoinColumn(name = "poison_id")},
-            inverseJoinColumns = {@JoinColumn(name = "tree_id")})
+    @ManyToMany(mappedBy = "poisons", fetch = FetchType.LAZY)
     private List<Tree> trees;
 
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
@@ -48,13 +51,13 @@ public class Poison {
         this.name = name;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
+//    public String getType() {
+//        return type;
+//    }
+//
+//    public void setType(String type) {
+//        this.type = type;
+//    }
 
     public List<Pest> getPests() {
         return pests;
@@ -70,5 +73,12 @@ public class Poison {
 
     public void setTrees(List<Tree> trees) {
         this.trees = trees;
+    }
+
+    public void copy(Poison poison){
+        setId(poison.getId());
+        setName(poison.getName());
+        setPests(poison.getPests());
+        setTrees(poison.getTrees());
     }
 }

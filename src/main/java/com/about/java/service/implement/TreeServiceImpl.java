@@ -37,7 +37,7 @@ public class TreeServiceImpl implements TreeService {
         tree.setId(treeDTO.getId());
         tree.setName(treeDTO.getName());
         tree.setHeight(treeDTO.getHeight());
-        tree.setDescribe(treeDTO.getDescribe());
+//        tree.setDescribe(treeDTO.getDescribe());
 
         if (treeDTO.getPoisonDTOs() != null){
             List<Poison> poisons = new ArrayList<Poison>();
@@ -97,7 +97,7 @@ public class TreeServiceImpl implements TreeService {
             treeDTO.setId(tree.getId());
             treeDTO.setName(tree.getName());
             treeDTO.setHeight(tree.getHeight());
-            treeDTO.setDescribe(tree.getDescribe());
+//            treeDTO.setDescribe(tree.getDescribe());
 
             Care care = tree.getCare();
             CareDTO careDTO = new CareDTO();
@@ -127,7 +127,7 @@ public class TreeServiceImpl implements TreeService {
                 treeDTO.setId(tree.getId());
                 treeDTO.setName(tree.getName());
                 treeDTO.setHeight(tree.getHeight());
-                treeDTO.setDescribe(tree.getDescribe());
+//                treeDTO.setDescribe(tree.getDescribe());
 
                 Care care = tree.getCare();
                 CareDTO careDTO = new CareDTO();

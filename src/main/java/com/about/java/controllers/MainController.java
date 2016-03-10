@@ -28,7 +28,7 @@ public class MainController {
 
         // Создание тестовых данных
         try {
-            saveService.addStaticCare();
+//            saveService.addStaticCare();
             saveService.addStaticTree();
             saveService.addStaticPoison();
             saveService.addStaticPest();

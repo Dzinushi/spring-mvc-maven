@@ -1,9 +1,11 @@
 package com.about.java.service.implement;
 
 import com.about.java.dao.interfaces.PoisonDAO;
+import com.about.java.dto.CareDTO;
 import com.about.java.dto.PestDTO;
 import com.about.java.dto.PoisonDTO;
 import com.about.java.dto.TreeDTO;
+import com.about.java.models.Care;
 import com.about.java.models.Pest;
 import com.about.java.models.Poison;
 import com.about.java.models.Tree;
@@ -73,7 +75,7 @@ public class PoisonServiceImpl implements PoisonService{
             PoisonDTO poisonDTO = new PoisonDTO();
             poisonDTO.setId(poison.getId());
             poisonDTO.setName(poison.getName());
-            poisonDTO.setType(poison.getType());
+//            poisonDTO.setType(poison.getType());
 
             List<PestDTO> pestDTOs = new ArrayList<PestDTO>();
             for (Pest pest : poison.getPests()){
@@ -96,13 +98,16 @@ public class PoisonServiceImpl implements PoisonService{
                 PoisonDTO poisonDTO = new PoisonDTO();
                 poisonDTO.setId(poison.getId());
                 poisonDTO.setName(poison.getName());
-                poisonDTO.setType(poison.getType());
+//                poisonDTO.setType(poison.getType());
 
-                List<PestDTO> pestDTOs = new ArrayList<PestDTO>();
-                for (Pest pest : poison.getPests()){
-                    pestDTOs.add(pestService.get(pest.getId()));
+                if (poisonDTO.getPestDTOs() != null){
+                    List<PestDTO> pestDTOs = new ArrayList<PestDTO>();
+                    for (Pest pest : poison.getPests()){
+                        pestDTOs.add(pestService.get(pest.getId()));
+                    }
+                    poisonDTO.setPestDTOs(pestDTOs);
                 }
-                poisonDTO.setPestDTOs(pestDTOs);
+
                 poisonDTOs.add(poisonDTO);
             }
             return poisonDTOs;
@@ -144,7 +149,15 @@ public class PoisonServiceImpl implements PoisonService{
             List<Tree> trees = new ArrayList<Tree>();
             for (int i = 0; i < poisonDTO.getTreeDTOs().size(); i++) {
                 TreeDTO treeDTO = poisonDTO.getTreeDTOs().get(i);
-                Tree tree = treeService.toTree(treeDTO);
+                Tree tree = new Tree();
+                tree.setId(treeDTO.getId());
+                tree.setName(treeDTO.getName());
+                tree.setHeight(treeDTO.getName());
+
+                CareDTO careDTO = treeDTO.getCareDTO();
+                Care care = new Care();
+                care.setId(careDTO.getId());
+                tree.setCare(care);
                 trees.add(tree);
             }
             poison.setTrees(trees);

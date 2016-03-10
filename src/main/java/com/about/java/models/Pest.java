@@ -1,6 +1,9 @@
 package com.about.java.models;
 
+import com.sun.istack.internal.NotNull;
+
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -12,13 +15,12 @@ public class Pest {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "name", length = 50)
+    @NotNull
+    @Size(max = 50)
+    @Column(name = "name")
     private String name;
 
-    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinTable(name = "poison_has_pests",
-            joinColumns = {@JoinColumn(name = "pests_id")},
-            inverseJoinColumns = {@JoinColumn(name = "poison_id")})
+    @ManyToMany(mappedBy = "pests", fetch = FetchType.LAZY)
     private List<Poison> poisons;
 
     public Pest()
@@ -46,5 +48,11 @@ public class Pest {
 
     public void setPoisons(List<Poison> poisons) {
         this.poisons = poisons;
+    }
+
+    public void copy(Pest pest){
+        setId(pest.getId());
+        setName(pest.getName());
+        setPoisons(pest.getPoisons());
     }
 }

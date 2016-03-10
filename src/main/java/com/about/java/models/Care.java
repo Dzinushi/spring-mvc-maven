@@ -13,7 +13,7 @@ public class Care {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne(mappedBy = "care", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "care")
     private Tree tree;
 
 //    @Column(name = "describe", length = 5000)
@@ -44,4 +44,9 @@ public class Care {
 //    public void setDescribe(String describe) {
 //        this.describe = describe;
 //    }
+
+    public void copy(Care care){
+        setId(care.getId());
+        setTree(care.getTree());
+    }
 }

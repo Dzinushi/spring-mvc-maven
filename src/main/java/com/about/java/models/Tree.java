@@ -1,8 +1,10 @@
 package com.about.java.models;
 
+import com.sun.istack.internal.NotNull;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -14,16 +16,19 @@ public class Tree {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "name", length = 20)
+    @NotNull
+    @Size(max = 20)
+    @Column(name = "name")
     private String name;
 
+    @NotNull
     @Column(name = "height")
     private String height;
 
-    @Column(name = "describe", length = 5000)
-    private String describe;
+//    @Column(name = "describe", length = 5000)
+//    private String describe;
 
-    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "care_id")
     private Care care;
 
@@ -52,13 +57,13 @@ public class Tree {
         this.height = height;
     }
 
-    public String getDescribe() {
-        return describe;
-    }
-
-    public void setDescribe(String describe) {
-        this.describe = describe;
-    }
+//    public String getDescribe() {
+//        return describe;
+//    }
+//
+//    public void setDescribe(String describe) {
+//        this.describe = describe;
+//    }
 
     public List<Poison> getPoisons() {
         return poisons;
@@ -82,5 +87,13 @@ public class Tree {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void copy(Tree tree){
+        setId(tree.getId());
+        setName(tree.getName());
+        setHeight(tree.getHeight());
+        setCare(tree.getCare());
+        setPoisons(tree.getPoisons());
     }
 }

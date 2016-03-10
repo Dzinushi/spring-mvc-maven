@@ -33,8 +33,15 @@ public class TreeDAOImpl implements TreeDAO {
             throw new NullPointerException();
         }
 
-        sessionFactory.getCurrentSession().update(tree);
-        return tree.getId();
+        Tree foundTree = (Tree) sessionFactory.getCurrentSession().get(Tree.class, tree.getId());
+        if (foundTree != null){
+            foundTree.copy(tree);
+            sessionFactory.getCurrentSession().update(foundTree);
+            return foundTree.getId();
+        }
+        else {
+            throw new NoSuchObjectException();
+        }
     }
 
     public Tree getTree(Long id) {

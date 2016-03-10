@@ -83,22 +83,21 @@ public class SaveServiceImpl implements SaveService{
 
     @Transactional
     public void addStaticPoison() {
-        PoisonDTO poisonDTO1 = new PoisonDTO();
-        poisonDTO1.setName("Эндобациллин");
+        String[] arrayPoison = new String[2];
+        arrayPoison[0] = "Эндобациллин";
+        arrayPoison[1] = "Бионефрин";
 
-        PoisonDTO poisonDTO2 = new PoisonDTO();
-        poisonDTO2.setName("Бионефрин");
-
-        // Сохраняем объекты PoisonDTO и получаем их id
-        try {
-            Long idPoison1 = poisonService.add(poisonDTO1);
-            Long idPoison2 = poisonService.add(poisonDTO2);
-            poisonDTO1.setId(idPoison1);
-            poisonDTO2.setId(idPoison2);
-        } catch (ObjectAlreadyExistsException e) {
-            e.printStackTrace();
+        for (String anArrayPoison : arrayPoison) {
+            PoisonDTO poisonDTO = new PoisonDTO();
+            poisonDTO.setName(anArrayPoison);
+            try {
+                poisonService.add(poisonDTO);
+            } catch (ObjectAlreadyExistsException e) {
+                e.printStackTrace();
+            }
         }
 
+        // Добавление в TreeDTO зависимости на модель PoisonDTO
         updateStaticTree();
     }
 
@@ -113,11 +112,16 @@ public class SaveServiceImpl implements SaveService{
         for (String arrayPest : arrayPests) {
             PestDTO pestDTO = new PestDTO();
             pestDTO.setName(arrayPest);
-            pestService.add(pestDTO);
+            try {
+                pestService.add(pestDTO);
+            } catch (ObjectAlreadyExistsException e){
+                e.printStackTrace();
+            }
         }
 
         updateStaticPoison();
     }
+
     @Transactional
     public void updateStaticTree() {
         List<TreeDTO> treeDTOs = new ArrayList<TreeDTO>();
