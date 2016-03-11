@@ -5,6 +5,7 @@ import com.sun.istack.internal.NotNull;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "poison")
@@ -25,13 +26,13 @@ public class Poison {
 //    private String type;
 
     @ManyToMany(mappedBy = "poisons", fetch = FetchType.LAZY)
-    private List<Tree> trees;
+    private Set<Tree> trees;
 
-    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(name = "poison_has_pests",
             joinColumns = {@JoinColumn(name = "poison_id")},
             inverseJoinColumns = {@JoinColumn(name = "pests_id")})
-    private List<Pest> pests;
+    private Set<Pest> pests;
 
     public Poison(){}
 
@@ -59,19 +60,19 @@ public class Poison {
 //        this.type = type;
 //    }
 
-    public List<Pest> getPests() {
+    public Set<Pest> getPests() {
         return pests;
     }
 
-    public void setPests(List<Pest> pests) {
+    public void setPests(Set<Pest> pests) {
         this.pests = pests;
     }
 
-    public List<Tree> getTrees() {
+    public Set<Tree> getTrees() {
         return trees;
     }
 
-    public void setTrees(List<Tree> trees) {
+    public void setTrees(Set<Tree> trees) {
         this.trees = trees;
     }
 

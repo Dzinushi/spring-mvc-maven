@@ -13,4 +13,5 @@ public interface CareService {
     List<CareDTO> getCare() throws NoSuchObjectException;
     void delete(Long id) throws NoSuchObjectException;
     Care toCare(CareDTO careDTO);
+    CareDTO toCareDTO(Care care);
 }

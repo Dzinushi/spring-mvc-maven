@@ -12,5 +12,6 @@ public interface TreeService {
     TreeDTO get(Long id) throws NoSuchObjectException;
     List<TreeDTO> get() throws NoSuchObjectException;
     void delete(Long id) throws NoSuchObjectException;
+    TreeDTO toTreeDTO(Tree tree) throws NoSuchObjectException;
     Tree toTree(TreeDTO treeDTO);
 }

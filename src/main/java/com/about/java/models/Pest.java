@@ -5,6 +5,7 @@ import com.sun.istack.internal.NotNull;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "pests")
@@ -21,7 +22,7 @@ public class Pest {
     private String name;
 
     @ManyToMany(mappedBy = "pests", fetch = FetchType.LAZY)
-    private List<Poison> poisons;
+    private Set<Poison> poisons;
 
     public Pest()
     {}
@@ -42,11 +43,11 @@ public class Pest {
         this.name = name;
     }
 
-    public List<Poison> getPoisons() {
+    public Set<Poison> getPoisons() {
         return poisons;
     }
 
-    public void setPoisons(List<Poison> poisons) {
+    public void setPoisons(Set<Poison> poisons) {
         this.poisons = poisons;
     }
 

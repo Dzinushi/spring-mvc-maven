@@ -187,15 +187,16 @@ public class SaveServiceImpl implements SaveService{
         for (int i = 0; i < pestDTOs.size(); i++) {
 
             PestDTO pestDTO = pestDTOs.get(i);
+            List<PoisonDTO> poisonDTOs1 = new ArrayList<PoisonDTO>();
 
             if (i < 2){
-                poisonDTOs.add(poisonDTOs.get(0));
+                poisonDTOs1.add(poisonDTOs.get(0));
             }
             else {
-                poisonDTOs.add(poisonDTOs.get(1));
+                poisonDTOs1.add(poisonDTOs.get(1));
             }
 
-            pestDTO.setPoisonDTOs(poisonDTOs);
+            pestDTO.setPoisonDTOs(poisonDTOs1);
 
             try {
                 pestService.update(pestDTO);

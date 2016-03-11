@@ -14,4 +14,5 @@ public interface PestService {
     PestDTO get(Long id) throws NoSuchObjectException;
     List<PestDTO> get() throws NoSuchObjectException;
     void delete(Long id) throws NoSuchObjectException;
+    PestDTO toPestDTO(Pest pest);
 }

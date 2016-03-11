@@ -18,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class TreeServiceImpl implements TreeService {
@@ -31,31 +33,6 @@ public class TreeServiceImpl implements TreeService {
 
     @Autowired
     private PoisonService poisonService;
-
-    public Tree toTree(TreeDTO treeDTO){
-        Tree tree = new Tree();
-        tree.setId(treeDTO.getId());
-        tree.setName(treeDTO.getName());
-        tree.setHeight(treeDTO.getHeight());
-//        tree.setDescribe(treeDTO.getDescribe());
-
-        if (treeDTO.getPoisonDTOs() != null){
-            List<Poison> poisons = new ArrayList<Poison>();
-            for (int i = 0; i < treeDTO.getPoisonDTOs().size(); i++) {
-                Poison poison = poisonService.toPoison(treeDTO.getPoisonDTOs().get(i));
-                poisons.add(poison);
-            }
-            tree.setPoisons(poisons);
-        }
-
-        Care care = new Care();
-        care.setId(treeDTO.getCareDTO().getId());
-        care.setTree(tree);
-//        care.setDescribe(treeDTO.getCareDTO().getDescribe());
-        tree.setCare(care);
-
-        return tree;
-    }
 
     @Transactional
     public Long add(TreeDTO treeDTO) throws ObjectAlreadyExistsException {
@@ -92,26 +69,7 @@ public class TreeServiceImpl implements TreeService {
             throw new NullPointerException();
         }
         try{
-            Tree tree = treeTypesDAO.getTree(id);
-            TreeDTO treeDTO = new TreeDTO();
-            treeDTO.setId(tree.getId());
-            treeDTO.setName(tree.getName());
-            treeDTO.setHeight(tree.getHeight());
-//            treeDTO.setDescribe(tree.getDescribe());
-
-            Care care = tree.getCare();
-            CareDTO careDTO = new CareDTO();
-            careDTO.setId(care.getId());
-//            careDTO.setDescribe(care.getDescribe());
-            treeDTO.setCareDTO(careDTO);
-
-            List<PoisonDTO> poisonDTOs = new ArrayList<PoisonDTO>();
-            for (Poison poison : tree.getPoisons()) {
-                poisonDTOs.add(poisonService.get(poison.getId()));
-            }
-            treeDTO.setPoisonDTOs(poisonDTOs);
-
-            return treeDTO;
+            return toTreeDTO(treeTypesDAO.getTree(id));
         } catch (HibernateException e){
             throw new NoSuchObjectException();
         }
@@ -123,23 +81,7 @@ public class TreeServiceImpl implements TreeService {
             List<Tree> trees =  treeTypesDAO.getTree();
             List<TreeDTO> treeDTOs = new ArrayList<TreeDTO>();
             for (Tree tree : trees) {
-                TreeDTO treeDTO = new TreeDTO();
-                treeDTO.setId(tree.getId());
-                treeDTO.setName(tree.getName());
-                treeDTO.setHeight(tree.getHeight());
-//                treeDTO.setDescribe(tree.getDescribe());
-
-                Care care = tree.getCare();
-                CareDTO careDTO = new CareDTO();
-                careDTO.setId(care.getId());
-//                careDTO.setDescribe(care.getDescribe());
-                treeDTO.setCareDTO(careDTO);
-
-                List<PoisonDTO> poisonDTOs = new ArrayList<PoisonDTO>();
-                for (Poison poison : tree.getPoisons()) {
-                    poisonDTOs.add(poisonService.get(poison.getId()));
-                }
-                treeDTO.setPoisonDTOs(poisonDTOs);
+                TreeDTO treeDTO = toTreeDTO(tree);
                 treeDTOs.add(treeDTO);
             }
             return treeDTOs;
@@ -160,5 +102,52 @@ public class TreeServiceImpl implements TreeService {
         } catch (HibernateException e){
             throw new NoSuchObjectException();
         }
+    }
+
+    public Tree toTree(TreeDTO treeDTO){
+        Tree tree = new Tree();
+        tree.setId(treeDTO.getId());
+        tree.setName(treeDTO.getName());
+        tree.setHeight(treeDTO.getHeight());
+//        tree.setDescribe(treeDTO.getDescribe());
+
+        if (treeDTO.getPoisonDTOs() != null){
+            Set<Poison> poisons = new HashSet<Poison>();
+            for (int i = 0; i < treeDTO.getPoisonDTOs().size(); i++) {
+                Poison poison = poisonService.toPoison(treeDTO.getPoisonDTOs().get(i));
+                poisons.add(poison);
+            }
+            tree.setPoisons(poisons);
+        }
+
+        Care care = new Care();
+        care.setId(treeDTO.getCareDTO().getId());
+        care.setTree(tree);
+//        care.setDescribe(treeDTO.getCareDTO().getDescribe());
+        tree.setCare(care);
+
+        return tree;
+    }
+
+    public TreeDTO toTreeDTO(Tree tree) throws NoSuchObjectException {
+        TreeDTO treeDTO = new TreeDTO();
+        treeDTO.setId(tree.getId());
+        treeDTO.setName(tree.getName());
+        treeDTO.setHeight(tree.getHeight());
+//                treeDTO.setDescribe(tree.getDescribe());
+
+        Care care = tree.getCare();
+        CareDTO careDTO = new CareDTO();
+        careDTO.setId(care.getId());
+//                careDTO.setDescribe(care.getDescribe());
+        treeDTO.setCareDTO(careDTO);
+
+        List<PoisonDTO> poisonDTOs = new ArrayList<PoisonDTO>();
+        for (Poison poison : tree.getPoisons()) {
+            poisonDTOs.add(poisonService.get(poison.getId()));
+        }
+        treeDTO.setPoisonDTOs(poisonDTOs);
+
+        return treeDTO;
     }
 }

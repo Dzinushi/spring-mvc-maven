@@ -1,11 +1,9 @@
 package com.about.java.models;
 
 import com.sun.istack.internal.NotNull;
-import org.codehaus.jackson.annotate.JsonIgnore;
-
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "tree")
@@ -32,11 +30,11 @@ public class Tree {
     @JoinColumn(name = "care_id")
     private Care care;
 
-    @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(name = "tree_has_poison",
             joinColumns = {@JoinColumn(name = "tree_id")},
             inverseJoinColumns = {@JoinColumn(name = "poison_id")})
-    private List<Poison> poisons;
+    private Set<Poison> poisons;
 
     public Tree()
     {}
@@ -65,11 +63,11 @@ public class Tree {
 //        this.describe = describe;
 //    }
 
-    public List<Poison> getPoisons() {
+    public Set<Poison> getPoisons() {
         return poisons;
     }
 
-    public void setPoisons(List<Poison> poisons) {
+    public void setPoisons(Set<Poison> poisons) {
         this.poisons = poisons;
     }
 

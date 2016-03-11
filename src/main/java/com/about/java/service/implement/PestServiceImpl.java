@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class PestServiceImpl implements PestService{
@@ -66,11 +68,7 @@ public class PestServiceImpl implements PestService{
             throw new NullPointerException();
         }
         try {
-            Pest pest = pestDAO.getPest(id);
-            PestDTO pestDTO = new PestDTO();
-            pestDTO.setId(pest.getId());
-            pestDTO.setName(pest.getName());
-            return pestDTO;
+            return toPestDTO(pestDAO.getPest(id));
 
         } catch (HibernateException e){
             throw new NoSuchObjectException();
@@ -83,9 +81,7 @@ public class PestServiceImpl implements PestService{
             List<Pest> pests = pestDAO.getPest();
             List<PestDTO> pestDTOs = new ArrayList<PestDTO>();
             for (Pest pest : pests){
-                PestDTO pestDTO = new PestDTO();
-                pestDTO.setId(pest.getId());
-                pestDTO.setName(pest.getName());
+                PestDTO pestDTO = toPestDTO(pest);
                 pestDTOs.add(pestDTO);
             }
             return pestDTOs;
@@ -106,6 +102,28 @@ public class PestServiceImpl implements PestService{
         }
     }
 
+    public PestDTO toPestDTO(Pest pest) {
+        PestDTO pestDTO = new PestDTO();
+        pestDTO.setId(pest.getId());
+        pestDTO.setName(pest.getName());
+
+        Set<Poison> poisons = pest.getPoisons();
+        if (poisons != null){
+            List<PoisonDTO> poisonDTOs = new ArrayList<PoisonDTO>();
+            for(Poison poison : poisons){
+                try {
+                    PoisonDTO poisonDTO = poisonService.toPoisonDTO(poison);
+                    poisonDTOs.add(poisonDTO);
+                } catch (NoSuchObjectException e) {
+                    e.printStackTrace();
+                }
+            }
+            pestDTO.setPoisonDTOs(poisonDTOs);
+        }
+
+        return pestDTO;
+    }
+
     public Pest toPest(PestDTO pestDTO) {
         Pest pest = new Pest();
         pest.setId(pestDTO.getId());
@@ -113,7 +131,7 @@ public class PestServiceImpl implements PestService{
         List<PoisonDTO> poisonDTOs = pestDTO.getPoisonDTOs();
 
         if (pestDTO.getPoisonDTOs() != null){
-            List<Poison> poisons = new ArrayList<Poison>();
+            Set<Poison> poisons = new HashSet<Poison>();
             for (PoisonDTO poisonDTO : poisonDTOs) {
                 Poison poison = poisonService.toPoison(poisonDTO);
                 poisons.add(poison);
