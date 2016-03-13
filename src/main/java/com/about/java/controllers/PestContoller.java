@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class PestContoller {
@@ -23,18 +24,18 @@ public class PestContoller {
     @Autowired
     private PestService pestService;
 
-//    @RequestMapping(value = "details/detailsPests", method = RequestMethod.GET)
-//    public ModelAndView get(){
-//        ModelAndView mav = new ModelAndView("details/detailsPests");
-//        try {
-//            List<PestDTO> pestDTOList = pestService.get();
-//            mav.addObject("pests", pestDTOList);
-//        } catch (NoSuchObjectException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return mav;
-//    }
+    @RequestMapping(value = "details/detailsPests", method = RequestMethod.GET)
+    public ModelAndView get(){
+        ModelAndView mav = new ModelAndView("details/detailsPests");
+        try {
+            Set<PestDTO> pestDTOList = pestService.getAll();
+            mav.addObject("pests", pestDTOList);
+        } catch (NoSuchObjectException e) {
+            e.printStackTrace();
+        }
+
+        return mav;
+    }
 
     @RequestMapping(value = "add/addPest", method = RequestMethod.POST)
     public void add(){

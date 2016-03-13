@@ -10,6 +10,7 @@ import com.about.java.service.exceptions.NoSuchObjectException;
 import com.about.java.service.exceptions.ObjectAlreadyExistsException;
 import com.about.java.service.interfaces.PestService;
 import com.about.java.service.interfaces.PoisonService;
+import com.about.java.util.Util;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,6 +83,22 @@ public class PestServiceImpl implements PestService{
         } catch (HibernateException e){
             throw new NoSuchObjectException();
         }
+    }
+
+    @Transactional
+    public PestDTO getByID(Long id) throws NoSuchObjectException {
+        List<PoisonPestDTO> poisonPestDTOs = get(id);
+        return poisonPestDTOs.get(0).getPestDTO();
+    }
+
+    @Transactional
+    public Set<PestDTO> getAll() throws NoSuchObjectException {
+        List<PoisonPestDTO> poisonPestDTOs = get();
+        Set<PestDTO> pestDTOs = new HashSet<PestDTO>();
+        for (PoisonPestDTO poisonPestDTO : poisonPestDTOs) {
+            pestDTOs.add(poisonPestDTO.getPestDTO());
+        }
+        return pestDTOs;
     }
 
     @Transactional

@@ -8,12 +8,15 @@ import com.about.java.service.exceptions.NoSuchObjectException;
 import com.about.java.service.exceptions.ObjectAlreadyExistsException;
 
 import java.util.List;
+import java.util.Set;
 
 public interface PestService {
     Long add(List<PoisonPestDTO> poisonPestDTOs) throws ObjectAlreadyExistsException;
     Long update(List<PoisonPestDTO> poisonPestDTOs) throws NoSuchObjectException;
     List<PoisonPestDTO> get(Long id) throws NoSuchObjectException;
     List<PoisonPestDTO> get() throws NoSuchObjectException;
+    PestDTO getByID(Long id) throws NoSuchObjectException;
+    Set<PestDTO> getAll() throws NoSuchObjectException;
     void delete(Long id) throws NoSuchObjectException;
     PestDTO toPestDTO(Pest pest);
     Pest toPest(PestDTO pestDTO);
