@@ -36,14 +36,6 @@ public class TreeDTO {
         this.describe = describe;
     }
 
-    public List<PoisonDTO> getPoisonDTOs() {
-        return poisonDTOs;
-    }
-
-    public void setPoisonDTOs(List<PoisonDTO> poisonDTOs) {
-        this.poisonDTOs = poisonDTOs;
-    }
-
     public Long getId() {
         return id;
     }
@@ -58,5 +50,13 @@ public class TreeDTO {
 
     public void setCareDTO(CareDTO careDTO) {
         this.careDTO = careDTO;
+    }
+
+    public List<PoisonDTO> getPoisonDTOs() {
+        return poisonDTOs;
+    }
+
+    public void setPoisonDTOs(List<PoisonDTO> poisonDTOs) {
+        this.poisonDTOs = poisonDTOs;
     }
 }

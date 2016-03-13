@@ -1,10 +1,7 @@
 package com.about.java.service.implement;
 
 import com.about.java.dao.interfaces.PoisonDAO;
-import com.about.java.dto.CareDTO;
-import com.about.java.dto.PestDTO;
-import com.about.java.dto.PoisonDTO;
-import com.about.java.dto.TreeDTO;
+import com.about.java.dto.*;
 import com.about.java.models.Care;
 import com.about.java.models.Pest;
 import com.about.java.models.Poison;
@@ -14,15 +11,14 @@ import com.about.java.service.exceptions.ObjectAlreadyExistsException;
 import com.about.java.service.interfaces.PestService;
 import com.about.java.service.interfaces.PoisonService;
 import com.about.java.service.interfaces.TreeService;
+import com.about.java.util.Util;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import javax.persistence.criteria.CriteriaBuilder;
+import java.util.*;
 
 @Service
 public class PoisonServiceImpl implements PoisonService{
@@ -37,30 +33,32 @@ public class PoisonServiceImpl implements PoisonService{
     private PestService pestService;
 
     @Transactional
-    public Long add(PoisonDTO poisonDTO) throws ObjectAlreadyExistsException {
-        if (poisonDTO == null){
+    public Long add(List<TreePoisonDTO> treePoisonDTOs, List<PoisonPestDTO> poisonPestDTOs) throws ObjectAlreadyExistsException {
+        if (treePoisonDTOs == null){
             throw new NullPointerException();
         }
-        try {
-            if(poisonDAO.find(poisonDTO.getName())){
+
+        for (TreePoisonDTO treePoisonDTO : treePoisonDTOs) {
+            if (poisonDAO.find(treePoisonDTO.getPoisonDTO().getName())) {
                 return null;
             }
-            else {
-                Poison poison = toPoison(poisonDTO);
-                return poisonDAO.addPoison(poison);
-            }
-        } catch (HibernateException e){
+        }
+
+        try {
+            Poison poison = toPoison(treePoisonDTOs, poisonPestDTOs);
+            return poisonDAO.addPoison(poison);
+        } catch (HibernateException e) {
             throw new ObjectAlreadyExistsException();
         }
     }
 
     @Transactional
-    public Long update(PoisonDTO poisonDTO) throws NoSuchObjectException {
-        if (poisonDTO == null){
+    public Long update(List<TreePoisonDTO> treePoisonDTOs, List<PoisonPestDTO> poisonPestDTOs) throws NoSuchObjectException {
+        if (treePoisonDTOs == null){
             throw new NullPointerException();
         }
         try {
-            Poison poison = toPoison(poisonDTO);
+            Poison poison = toPoison(treePoisonDTOs, poisonPestDTOs);
             return poisonDAO.updatePoison(poison);
         } catch (HibernateException e){
             throw new NoSuchObjectException();
@@ -68,31 +66,95 @@ public class PoisonServiceImpl implements PoisonService{
     }
 
     @Transactional
-    public PoisonDTO get(Long id) throws NoSuchObjectException {
+    public List<TreePoisonDTO> getTreePoisons(Long id) throws NoSuchObjectException {
         if (id == 0){
             throw new NullPointerException();
         }
         try {
-            return toPoisonDTO(poisonDAO.getPoison(id));
-
+            Poison poison = poisonDAO.getPoison(id);
+            return toTreePoisonDTO(poison);
         } catch (HibernateException e){
             throw new NoSuchObjectException();
         }
     }
 
     @Transactional
-    public List<PoisonDTO> get() throws NoSuchObjectException {
+    public List<TreePoisonDTO> getTreePoisons() throws NoSuchObjectException {
         try {
             List<Poison> poisons =  poisonDAO.getPoison();
-            List<PoisonDTO> poisonDTOs = new ArrayList<PoisonDTO>();
-            for (Poison poison : poisons) {
-                PoisonDTO poisonDTO = toPoisonDTO(poison);
-                poisonDTOs.add(poisonDTO);
-            }
-            return poisonDTOs;
+            return toTreePoisonDTO(poisons);
         } catch (HibernateException e){
             throw new NoSuchObjectException();
         }
+    }
+
+    @Transactional
+    public List<PoisonPestDTO> getPoisonPests(Long id) throws NoSuchObjectException {
+        if (id == 0){
+            throw new NullPointerException();
+        }
+        try {
+            Poison poison = poisonDAO.getPoison(id);
+            return toPoisonPestDTO(poison);
+        } catch (HibernateException e){
+            throw new NoSuchObjectException();
+        }
+    }
+
+    @Transactional
+    public List<PoisonPestDTO> getPoisonPests() throws NoSuchObjectException {
+        try {
+            List<Poison> poisons =  poisonDAO.getPoison();
+            return toPoisonPestDTO(poisons);
+        } catch (HibernateException e){
+            throw new NoSuchObjectException();
+        }
+    }
+
+    @Transactional
+    public PoisonDTO getByID(Long id) throws NoSuchObjectException {
+        List<PoisonPestDTO> poisonPestDTOs = getPoisonPests(id);
+        List<PestDTO> pestDTOs = new ArrayList<PestDTO>();
+        PoisonDTO poisonDTO = poisonPestDTOs.get(0).getPoisonDTO();
+
+        for (PoisonPestDTO poisonPestDTO : poisonPestDTOs) {
+            PestDTO pestDTO = poisonPestDTO.getPestDTO();
+            pestDTOs.add(pestDTO);
+
+            poisonDTO.setPestDTOs(pestDTOs);
+        }
+
+        return poisonDTO;
+    }
+
+    @Transactional
+    public List<PoisonDTO> getAll() throws NoSuchObjectException {
+        List<PoisonPestDTO> poisonPestDTOs = getPoisonPests();
+        List<PoisonDTO> poisonDTOs = new ArrayList<PoisonDTO>();
+
+        Set<Long> idPoisons = new HashSet<Long>();
+        Map<Long, Integer> indexPoisons = new HashMap<Long, Integer>();
+        for (PoisonPestDTO poisonPestDTO : poisonPestDTOs) {
+            PoisonDTO poisonDTO = poisonPestDTO.getPoisonDTO();
+            int index = Util.find(idPoisons, poisonDTO.getId());
+            idPoisons.add(poisonDTO.getId());
+
+            if (index == -1){
+                List<PestDTO> pestDTOs = new ArrayList<PestDTO>();
+                pestDTOs.add(poisonPestDTO.getPestDTO());
+                poisonDTO.setPestDTOs(pestDTOs);
+                poisonDTOs.add(poisonDTO);
+                indexPoisons.put(poisonDTO.getId(), indexPoisons.size());
+            }
+            else {
+                List<PestDTO> pestDTOs = poisonDTOs.get(indexPoisons.get(poisonDTO.getId())).getPestDTOs();
+                pestDTOs.add(poisonPestDTO.getPestDTO());
+                poisonDTO.setPestDTOs(pestDTOs);
+                poisonDTOs.set(index, poisonDTO);
+            }
+        }
+
+        return poisonDTOs;
     }
 
     @Transactional
@@ -106,41 +168,44 @@ public class PoisonServiceImpl implements PoisonService{
             throw new NoSuchObjectException();
         }
     }
-    
+
+    public Poison toPoison(List<TreePoisonDTO> treePoisonDTOs, List<PoisonPestDTO> poisonPestDTOs) {
+
+        if (treePoisonDTOs == null || poisonPestDTOs == null){
+            throw new NullPointerException();
+        }
+
+        Set<Tree> trees = new HashSet<Tree>();
+        Set<Pest> pests = new HashSet<Pest>();
+
+        for (TreePoisonDTO treePoisonDTO : treePoisonDTOs) {
+            TreeDTO treeDTO = treePoisonDTO.getTreeDTO();
+            if (treeDTO != null) {
+                Tree tree = treeService.toTree(treeDTO);
+                trees.add(tree);
+            }
+        }
+
+        for (PoisonPestDTO poisonPestDTO : poisonPestDTOs) {
+            PestDTO pestDTO = poisonPestDTO.getPestDTO();
+            if (pestDTO != null) {
+                Pest pest = pestService.toPest(pestDTO);
+                pests.add(pest);
+            }
+        }
+
+        PoisonDTO poisonDTO = treePoisonDTOs.get(0).getPoisonDTO();
+        Poison poison = toPoison(poisonDTO);
+        poison.setTrees(trees);
+        poison.setPests(pests);
+
+        return poison;
+    }
+
     public Poison toPoison(PoisonDTO poisonDTO){
         Poison poison = new Poison();
         poison.setId(poisonDTO.getId());
         poison.setName(poisonDTO.getName());
-
-        if (poisonDTO.getPestDTOs() != null){
-            Set<Pest> pests = new HashSet<Pest>();
-            for (int i = 0; i < poisonDTO.getPestDTOs().size(); i++) {
-                PestDTO pestDTO = poisonDTO.getPestDTOs().get(i);
-                Pest pest = new Pest();
-                pest.setId(pestDTO.getId());
-                pest.setName(pestDTO.getName());
-                pests.add(pest);
-            }
-            poison.setPests(pests);
-        }
-
-        if (poisonDTO.getTreeDTOs() != null){
-            Set<Tree> trees = new HashSet<Tree>();
-            for (int i = 0; i < poisonDTO.getTreeDTOs().size(); i++) {
-                TreeDTO treeDTO = poisonDTO.getTreeDTOs().get(i);
-                Tree tree = new Tree();
-                tree.setId(treeDTO.getId());
-                tree.setName(treeDTO.getName());
-                tree.setHeight(treeDTO.getName());
-
-                CareDTO careDTO = treeDTO.getCareDTO();
-                Care care = new Care();
-                care.setId(careDTO.getId());
-                tree.setCare(care);
-                trees.add(tree);
-            }
-            poison.setTrees(trees);
-        }
 
         return poison;
     }
@@ -151,31 +216,88 @@ public class PoisonServiceImpl implements PoisonService{
         poisonDTO.setName(poison.getName());
 //                poisonDTO.setType(poison.getType());
 
-        if (poison.getTrees() != null){
-            List<TreeDTO> treeDTOs = new ArrayList<TreeDTO>();
-            for(Tree tree : poison.getTrees()){
-                TreeDTO treeDTO = new TreeDTO();
-                treeDTO.setId(tree.getId());
-                treeDTO.setName(tree.getName());
-                treeDTO.setHeight(tree.getHeight());
-
-                Care care = tree.getCare();
-                CareDTO careDTO = new CareDTO();
-                careDTO.setId(care.getId());
-                treeDTO.setCareDTO(careDTO);
-                treeDTOs.add(treeDTO);
-            }
-            poisonDTO.setTreeDTOs(treeDTOs);
-        }
-
-        if (poisonDTO.getPestDTOs() != null){
-            List<PestDTO> pestDTOs = new ArrayList<PestDTO>();
-            for (Pest pest : poison.getPests()){
-                pestDTOs.add(pestService.get(pest.getId()));
-            }
-            poisonDTO.setPestDTOs(pestDTOs);
-        }
-
         return poisonDTO;
+    }
+
+    public List<TreePoisonDTO> toTreePoisonDTO(Poison poison) throws NoSuchObjectException {
+        List<TreePoisonDTO> treePoisonDTOs = new ArrayList<TreePoisonDTO>();
+
+        if (poison.getTrees().size() == 0){
+            TreePoisonDTO treePoisonDTO = new TreePoisonDTO();
+
+            PoisonDTO poisonDTO = toPoisonDTO(poison);
+            treePoisonDTO.setPoisonDTO(poisonDTO);
+
+            treePoisonDTOs.add(treePoisonDTO);
+        }
+        else {
+            for(Tree tree : poison.getTrees()){
+                TreePoisonDTO treePoisonDTO = new TreePoisonDTO();
+
+                TreeDTO treeDTO = treeService.toTreeDTO(tree);
+                treePoisonDTO.setTreeDTO(treeDTO);
+
+                PoisonDTO poisonDTO = toPoisonDTO(poison);
+                treePoisonDTO.setPoisonDTO(poisonDTO);
+
+                treePoisonDTOs.add(treePoisonDTO);
+            }
+        }
+
+        return treePoisonDTOs;
+    }
+
+    public List<TreePoisonDTO> toTreePoisonDTO(List<Poison> poisons) throws NoSuchObjectException {
+        List<TreePoisonDTO> treePoisonDTOs = new ArrayList<TreePoisonDTO>();
+
+        for(Poison poison : poisons){
+            List<TreePoisonDTO> partTreePoisonDTOs = toTreePoisonDTO(poison);
+
+            for (TreePoisonDTO partTreePoisonDTO : partTreePoisonDTOs) {
+                treePoisonDTOs.add(partTreePoisonDTO);
+            }
+        }
+        return treePoisonDTOs;
+    }
+
+    public List<PoisonPestDTO> toPoisonPestDTO(Poison poison) throws NoSuchObjectException {
+        List<PoisonPestDTO> poisonPestDTOs = new ArrayList<PoisonPestDTO>();
+
+        if (poison.getPests().size() == 0){
+            PoisonPestDTO poisonPestDTO = new PoisonPestDTO();
+
+            PoisonDTO poisonDTO = toPoisonDTO(poison);
+            poisonPestDTO.setPoisonDTO(poisonDTO);
+
+            poisonPestDTOs.add(poisonPestDTO);
+        }
+        else {
+            for(Pest pest : poison.getPests()){
+                PoisonPestDTO poisonPestDTO = new PoisonPestDTO();
+
+                PoisonDTO poisonDTO = toPoisonDTO(poison);
+                poisonPestDTO.setPoisonDTO(poisonDTO);
+
+                PestDTO pestDTO = pestService.toPestDTO(pest);
+                poisonPestDTO.setPestDTO(pestDTO);
+
+                poisonPestDTOs.add(poisonPestDTO);
+            }
+        }
+
+        return poisonPestDTOs;
+    }
+
+    public List<PoisonPestDTO> toPoisonPestDTO(List<Poison> poisons) throws NoSuchObjectException {
+        List<PoisonPestDTO> poisonPestDTOs = new ArrayList<PoisonPestDTO>();
+
+        for(Poison poison : poisons){
+            List<PoisonPestDTO> partPoisonPestDTOs = toPoisonPestDTO(poison);
+
+            for (PoisonPestDTO partPoisonPestDTO : partPoisonPestDTOs) {
+                poisonPestDTOs.add(partPoisonPestDTO);
+            }
+        }
+        return poisonPestDTOs;
     }
 }

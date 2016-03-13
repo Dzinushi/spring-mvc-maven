@@ -23,18 +23,18 @@ public class PestContoller {
     @Autowired
     private PestService pestService;
 
-    @RequestMapping(value = "details/detailsPests", method = RequestMethod.GET)
-    public ModelAndView get(){
-        ModelAndView mav = new ModelAndView("details/detailsPests");
-        try {
-            List<PestDTO> pestDTOList = pestService.get();
-            mav.addObject("pests", pestDTOList);
-        } catch (NoSuchObjectException e) {
-            e.printStackTrace();
-        }
-
-        return mav;
-    }
+//    @RequestMapping(value = "details/detailsPests", method = RequestMethod.GET)
+//    public ModelAndView get(){
+//        ModelAndView mav = new ModelAndView("details/detailsPests");
+//        try {
+//            List<PestDTO> pestDTOList = pestService.get();
+//            mav.addObject("pests", pestDTOList);
+//        } catch (NoSuchObjectException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return mav;
+//    }
 
     @RequestMapping(value = "add/addPest", method = RequestMethod.POST)
     public void add(){
@@ -47,30 +47,30 @@ public class PestContoller {
         return "redirect:../details/detailsPests";
     }
 
-    @RequestMapping(value = "details/detailsPests", method = RequestMethod.POST)
-    public String add(@RequestParam(value = "name") String name, ModelMap modelMap) throws ObjectAlreadyExistsException {
-        PestDTO pestDTO = new PestDTO();
-        pestDTO.setName(name);
-        pestService.add(pestDTO);
-
-        try {
-            List<PestDTO> pestDTOList = pestService.get();
-            modelMap.addAttribute("pests", pestDTOList);
-        } catch (NoSuchObjectException e) {
-            e.printStackTrace();
-        }
-
-        return "details/detailsPests";
-    }
-
-    @RequestMapping(value = "details/applyPests")
-    public String apply(@RequestParam(value = "checkedPests") List<Long> idPests, ModelMap modelMap) throws NoSuchObjectException {
-        List<PestDTO> pestDTOs = new ArrayList<PestDTO>();
-        for (Long idPest : idPests) {
-            PestDTO pest = pestService.get(idPest);
-            pestDTOs.add(pest);
-        }
-        modelMap.addAttribute("pests", pestDTOs);
-        return "add/addPoison";
-    }
+//    @RequestMapping(value = "details/detailsPests", method = RequestMethod.POST)
+//    public String add(@RequestParam(value = "name") String name, ModelMap modelMap) throws ObjectAlreadyExistsException {
+//        PestDTO pestDTO = new PestDTO();
+//        pestDTO.setName(name);
+//        pestService.add(pestDTO);
+//
+//        try {
+//            List<PestDTO> pestDTOList = pestService.get();
+//            modelMap.addAttribute("pests", pestDTOList);
+//        } catch (NoSuchObjectException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return "details/detailsPests";
+//    }
+//
+//    @RequestMapping(value = "details/applyPests")
+//    public String apply(@RequestParam(value = "checkedPests") List<Long> idPests, ModelMap modelMap) throws NoSuchObjectException {
+//        List<PestDTO> pestDTOs = new ArrayList<PestDTO>();
+//        for (Long idPest : idPests) {
+//            PestDTO pest = pestService.get(idPest);
+//            pestDTOs.add(pest);
+//        }
+//        modelMap.addAttribute("pests", pestDTOs);
+//        return "add/addPoison";
+//    }
 }

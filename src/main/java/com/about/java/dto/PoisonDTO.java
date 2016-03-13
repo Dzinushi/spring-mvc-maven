@@ -1,8 +1,6 @@
 package com.about.java.dto;
 
-import com.about.java.models.Poison;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PoisonDTO {
@@ -11,7 +9,6 @@ public class PoisonDTO {
     private String name;
     private String type;
     private List<PestDTO> pestDTOs;
-    private List<TreeDTO> treeDTOs;
 
     public Long getId() {
         return id;
@@ -43,13 +40,5 @@ public class PoisonDTO {
 
     public void setPestDTOs(List<PestDTO> pestDTOs) {
         this.pestDTOs = pestDTOs;
-    }
-
-    public List<TreeDTO> getTreeDTOs() {
-        return treeDTOs;
-    }
-
-    public void setTreeDTOs(List<TreeDTO> treeDTOs) {
-        this.treeDTOs = treeDTOs;
     }
 }

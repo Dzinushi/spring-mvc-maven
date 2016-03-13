@@ -1,6 +1,7 @@
 package com.about.java.controllers;
 
 import com.about.java.dto.TreeDTO;
+import com.about.java.dto.TreePoisonDTO;
 import com.about.java.service.exceptions.NoSuchObjectException;
 import com.about.java.service.exceptions.ObjectAlreadyExistsException;
 import com.about.java.service.interfaces.SaveService;
@@ -12,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class MainController {
@@ -28,7 +31,6 @@ public class MainController {
 
         // Создание тестовых данных
         try {
-//            saveService.addStaticCare();
             saveService.addStaticTree();
             saveService.addStaticPoison();
             saveService.addStaticPest();
@@ -39,11 +41,16 @@ public class MainController {
         // Получение всех видов деревьев из таблицы
         ModelAndView mav = new ModelAndView("main");
 
-        List<TreeDTO> treeDTOs = null;
+        List<TreePoisonDTO> treePoisonDTOs = null;
         try {
-            treeDTOs = treeService.get();
+            treePoisonDTOs = treeService.get();
         } catch (NoSuchObjectException e) {
             e.printStackTrace();
+        }
+
+        Set<TreeDTO> treeDTOs = new HashSet<TreeDTO>();
+        for (TreePoisonDTO treePoisonDTO : treePoisonDTOs){
+            treeDTOs.add(treePoisonDTO.getTreeDTO());
         }
 
         mav.addObject("trees", treeDTOs);

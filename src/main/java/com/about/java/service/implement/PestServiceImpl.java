@@ -3,6 +3,7 @@ package com.about.java.service.implement;
 import com.about.java.dao.interfaces.PestDAO;
 import com.about.java.dto.PestDTO;
 import com.about.java.dto.PoisonDTO;
+import com.about.java.dto.PoisonPestDTO;
 import com.about.java.models.Pest;
 import com.about.java.models.Poison;
 import com.about.java.service.exceptions.NoSuchObjectException;
@@ -29,33 +30,33 @@ public class PestServiceImpl implements PestService{
     private PoisonService poisonService;
 
     @Transactional
-    public Long add(PestDTO pestDTO) throws ObjectAlreadyExistsException {
-        if (pestDTO == null){
+    public Long add(List<PoisonPestDTO> poisonPestDTOs) throws ObjectAlreadyExistsException {
+        if (poisonPestDTOs == null){
             throw new NullPointerException();
         }
 
-        try{
+        for(PoisonPestDTO poisonPestDTO : poisonPestDTOs) {
             // проверка на уникальность
-            if (pestDAO.find(pestDTO.getName())){
+            if (pestDAO.find(poisonPestDTO.getPestDTO().getName())) {
                 return null;
             }
-            else {
-                Pest pest = toPest(pestDTO);
-                return pestDAO.addPest(pest);
-            }
+        }
+        try{
+            Pest pest = toPest(poisonPestDTOs);
+            return pestDAO.addPest(pest);
         } catch (HibernateException e){
             throw new ObjectAlreadyExistsException();
         }
     }
 
     @Transactional
-    public Long update(PestDTO pestDTO) throws NoSuchObjectException {
-        if (pestDTO == null){
+    public Long update(List<PoisonPestDTO> poisonPestDTOs) throws NoSuchObjectException {
+        if (poisonPestDTOs == null){
             throw new NullPointerException();
         }
 
         try{
-            Pest pest = toPest(pestDTO);
+            Pest pest = toPest(poisonPestDTOs);
             return pestDAO.updatePest(pest);
         } catch (HibernateException e){
             throw new NoSuchObjectException();
@@ -63,28 +64,21 @@ public class PestServiceImpl implements PestService{
     }
 
     @Transactional
-    public PestDTO get(Long id) throws NoSuchObjectException {
+    public List<PoisonPestDTO> get(Long id) throws NoSuchObjectException {
         if (id == 0){
             throw new NullPointerException();
         }
         try {
-            return toPestDTO(pestDAO.getPest(id));
-
+            return toPoisonPestDTOs(pestDAO.getPest(id));
         } catch (HibernateException e){
             throw new NoSuchObjectException();
         }
     }
 
     @Transactional
-    public List<PestDTO> get() throws NoSuchObjectException {
+    public List<PoisonPestDTO> get() throws NoSuchObjectException {
         try {
-            List<Pest> pests = pestDAO.getPest();
-            List<PestDTO> pestDTOs = new ArrayList<PestDTO>();
-            for (Pest pest : pests){
-                PestDTO pestDTO = toPestDTO(pest);
-                pestDTOs.add(pestDTO);
-            }
-            return pestDTOs;
+            return toPoisonPestDTOs(pestDAO.getPest());
         } catch (HibernateException e){
             throw new NoSuchObjectException();
         }
@@ -107,20 +101,6 @@ public class PestServiceImpl implements PestService{
         pestDTO.setId(pest.getId());
         pestDTO.setName(pest.getName());
 
-        Set<Poison> poisons = pest.getPoisons();
-        if (poisons != null){
-            List<PoisonDTO> poisonDTOs = new ArrayList<PoisonDTO>();
-            for(Poison poison : poisons){
-                try {
-                    PoisonDTO poisonDTO = poisonService.toPoisonDTO(poison);
-                    poisonDTOs.add(poisonDTO);
-                } catch (NoSuchObjectException e) {
-                    e.printStackTrace();
-                }
-            }
-            pestDTO.setPoisonDTOs(poisonDTOs);
-        }
-
         return pestDTO;
     }
 
@@ -128,17 +108,59 @@ public class PestServiceImpl implements PestService{
         Pest pest = new Pest();
         pest.setId(pestDTO.getId());
         pest.setName(pestDTO.getName());
-        List<PoisonDTO> poisonDTOs = pestDTO.getPoisonDTOs();
 
-        if (pestDTO.getPoisonDTOs() != null){
-            Set<Poison> poisons = new HashSet<Poison>();
-            for (PoisonDTO poisonDTO : poisonDTOs) {
+        return pest;
+    }
+
+    public Pest toPest(List<PoisonPestDTO> poisonPestDTOs) {
+        if (poisonPestDTOs == null){
+            throw new NullPointerException();
+        }
+
+        Set<Poison> poisons = new HashSet<Poison>();
+        for (PoisonPestDTO poisonPestDTO : poisonPestDTOs){
+            PoisonDTO poisonDTO = poisonPestDTO.getPoisonDTO();
+            if (poisonDTO != null) {
                 Poison poison = poisonService.toPoison(poisonDTO);
                 poisons.add(poison);
             }
-            pest.setPoisons(poisons);
         }
+        Pest pest = toPest(poisonPestDTOs.get(0).getPestDTO());
+        pest.setPoisons(poisons);
 
         return pest;
+    }
+
+    public List<PoisonPestDTO> toPoisonPestDTOs(Pest pest) throws NoSuchObjectException {
+        List<PoisonPestDTO> poisonPestDTOs = new ArrayList<PoisonPestDTO>();
+
+        if (pest.getPoisons().size() == 0){
+            PoisonPestDTO poisonPestDTO = new PoisonPestDTO();
+            poisonPestDTO.setPestDTO(toPestDTO(pest));
+            poisonPestDTOs.add(poisonPestDTO);
+        }
+        else {
+            for (Poison poison : pest.getPoisons()) {
+                PoisonPestDTO poisonPestDTO = new PoisonPestDTO();
+                poisonPestDTO.setPestDTO(toPestDTO(pest));
+                poisonPestDTO.setPoisonDTO(poisonService.toPoisonDTO(poison));
+                poisonPestDTOs.add(poisonPestDTO);
+            }
+        }
+        return poisonPestDTOs;
+    }
+
+    public List<PoisonPestDTO> toPoisonPestDTOs(List<Pest> pests) throws NoSuchObjectException {
+        List<PoisonPestDTO> poisonPestDTOs = new ArrayList<PoisonPestDTO>();
+
+        for (Pest pest : pests){
+            List<PoisonPestDTO> partPoisonPestDTOs = toPoisonPestDTOs(pest);
+
+            for (PoisonPestDTO poisonPestDTO : partPoisonPestDTOs){
+                poisonPestDTOs.add(poisonPestDTO);
+            }
+        }
+
+        return poisonPestDTOs;
     }
 }

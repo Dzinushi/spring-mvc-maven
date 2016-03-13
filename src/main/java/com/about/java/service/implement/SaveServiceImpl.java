@@ -1,9 +1,6 @@
 package com.about.java.service.implement;
 
-import com.about.java.dto.CareDTO;
-import com.about.java.dto.PestDTO;
-import com.about.java.dto.PoisonDTO;
-import com.about.java.dto.TreeDTO;
+import com.about.java.dto.*;
 import com.about.java.service.exceptions.NoSuchObjectException;
 import com.about.java.service.exceptions.ObjectAlreadyExistsException;
 import com.about.java.service.interfaces.*;
@@ -18,9 +15,6 @@ import java.util.List;
 public class SaveServiceImpl implements SaveService{
 
     @Autowired
-    private CareService careService;
-
-    @Autowired
     private TreeService treeService;
 
     @Autowired
@@ -30,52 +24,40 @@ public class SaveServiceImpl implements SaveService{
     private PestService pestService;
 
     @Transactional
-    public void addStaticCare() {
-        String[] arrayCare = new String[2];
-        arrayCare[0] = "h";
-        arrayCare[1] = "ell";
-
-        for (String anArrayCare : arrayCare) {
-            CareDTO careDTO = new CareDTO();
-            careDTO.setDescribe(anArrayCare);
-            try {
-                careService.add(careDTO);
-            } catch (ObjectAlreadyExistsException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Transactional
-    public void addStaticTree() {
+    public void addStaticTree() throws ObjectAlreadyExistsException {
+        TreePoisonDTO treePoisonDTO1 = new TreePoisonDTO();
         TreeDTO treeDTO1 = new TreeDTO();
         treeDTO1.setName("Береза");
         treeDTO1.setHeight("30-45м");
         treeDTO1.setDescribe("111");
 
+        TreePoisonDTO treePoisonDTO2 = new TreePoisonDTO();
         TreeDTO treeDTO2 = new TreeDTO();
         treeDTO2.setName("Ясень");
         treeDTO2.setHeight("25-35м");
         treeDTO2.setDescribe("222");
 
-        try {
-            List<CareDTO> careDTOs = careService.getCare();
+        CareDTO careDTO1 = new CareDTO();
+        careDTO1.setDescribe("kill");
+        treeDTO1.setCareDTO(careDTO1);
 
-            CareDTO careDTO1 = careDTOs.get(0);
-            treeDTO1.setCareDTO(careDTO1);
+        CareDTO careDTO2 = new CareDTO();
+        careDTO2.setDescribe("bill");
+        treeDTO2.setCareDTO(careDTO2);
 
-            CareDTO careDTO2 = careDTOs.get(1);
-            treeDTO2.setCareDTO(careDTO2);
-
-        } catch (NoSuchObjectException e) {
-            e.printStackTrace();
-        }
+        treePoisonDTO1.setTreeDTO(treeDTO1);
+        treePoisonDTO2.setTreeDTO(treeDTO2);
 
         // Сохраняем объект Tree и возвращаем полученный от Hibernate id
         // Добавляем этот id в объект TreeDTO
         try {
-            treeService.add(treeDTO1);
-            treeService.add(treeDTO2);
+            List<TreePoisonDTO> treePoisonDTOs1 = new ArrayList<TreePoisonDTO>();
+            treePoisonDTOs1.add(treePoisonDTO1);
+            treeService.add(treePoisonDTOs1);
+
+            List<TreePoisonDTO> treePoisonDTOs2 = new ArrayList<TreePoisonDTO>();
+            treePoisonDTOs2.add(treePoisonDTO2);
+            treeService.add(treePoisonDTOs2);
         } catch (ObjectAlreadyExistsException e) {
             e.printStackTrace();
         }
@@ -83,18 +65,26 @@ public class SaveServiceImpl implements SaveService{
 
     @Transactional
     public void addStaticPoison() {
-        String[] arrayPoison = new String[2];
-        arrayPoison[0] = "Эндобациллин";
-        arrayPoison[1] = "Бионефрин";
+        List<TreePoisonDTO> treePoisonDTOs1 = new ArrayList<TreePoisonDTO>();
+        List<TreePoisonDTO> treePoisonDTOs2 = new ArrayList<TreePoisonDTO>();
 
-        for (String anArrayPoison : arrayPoison) {
-            PoisonDTO poisonDTO = new PoisonDTO();
-            poisonDTO.setName(anArrayPoison);
-            try {
-                poisonService.add(poisonDTO);
-            } catch (ObjectAlreadyExistsException e) {
-                e.printStackTrace();
-            }
+        PoisonDTO poisonDTO1 = new PoisonDTO();
+        poisonDTO1.setName("Эндобациллин");
+        TreePoisonDTO treePoisonDTO1 = new TreePoisonDTO();
+        treePoisonDTO1.setPoisonDTO(poisonDTO1);
+        treePoisonDTOs1.add(treePoisonDTO1);
+
+        PoisonDTO poisonDTO2 = new PoisonDTO();
+        poisonDTO2.setName("Бионефрин");
+        TreePoisonDTO treePoisonDTO2 = new TreePoisonDTO();
+        treePoisonDTO2.setPoisonDTO(poisonDTO2);
+        treePoisonDTOs2.add(treePoisonDTO2);
+
+        try {
+            poisonService.add(treePoisonDTOs1, new ArrayList<PoisonPestDTO>());
+            poisonService.add(treePoisonDTOs2, new ArrayList<PoisonPestDTO>());
+        } catch (ObjectAlreadyExistsException e) {
+            e.printStackTrace();
         }
 
         // Добавление в TreeDTO зависимости на модель PoisonDTO
@@ -110,13 +100,17 @@ public class SaveServiceImpl implements SaveService{
         arrayPests[3] = "Майский жук";
 
         for (String arrayPest : arrayPests) {
+
+            List<PoisonPestDTO> poisonPestDTOs = new ArrayList<PoisonPestDTO>();
+
             PestDTO pestDTO = new PestDTO();
             pestDTO.setName(arrayPest);
-            try {
-                pestService.add(pestDTO);
-            } catch (ObjectAlreadyExistsException e){
-                e.printStackTrace();
-            }
+
+            PoisonPestDTO poisonPestDTO = new PoisonPestDTO();
+            poisonPestDTO.setPestDTO(pestDTO);
+            poisonPestDTOs.add(poisonPestDTO);
+
+            pestService.add(poisonPestDTOs);
         }
 
         updateStaticPoison();
@@ -124,44 +118,54 @@ public class SaveServiceImpl implements SaveService{
 
     @Transactional
     public void updateStaticTree() {
-        List<TreeDTO> treeDTOs = new ArrayList<TreeDTO>();
+        List<TreePoisonDTO> treePoisons = new ArrayList<TreePoisonDTO>();
+        List<TreePoisonDTO> poisonTrees = new ArrayList<TreePoisonDTO>();
         try {
-            treeDTOs = treeService.get();
+            treePoisons = treeService.get();
+            poisonTrees = poisonService.getTreePoisons();
         } catch (NoSuchObjectException e) {
             e.printStackTrace();
         }
 
+        // Обновляем связи объекта PoisonDTO
+        TreePoisonDTO poisonTreeDTO1 = poisonTrees.get(0);
+        poisonTreeDTO1.setTreeDTO(treePoisons.get(0).getTreeDTO());
+        poisonTreeDTO1.setPoisonDTO(poisonTrees.get(0).getPoisonDTO());
+        List<TreePoisonDTO> treePoisonDTOs1 = new ArrayList<TreePoisonDTO>();
+        treePoisonDTOs1.add(poisonTreeDTO1);
+
+        TreePoisonDTO poisonTreeDTO2 = poisonTrees.get(1);
+        poisonTreeDTO2.setTreeDTO(treePoisons.get(1).getTreeDTO());
+        poisonTreeDTO2.setPoisonDTO(poisonTrees.get(1).getPoisonDTO());
+        List<TreePoisonDTO> treePoisonDTOs2 = new ArrayList<TreePoisonDTO>();
+        treePoisonDTOs2.add(poisonTreeDTO2);
+
+        // Обновляем связи объекта TreeDTO
+        TreePoisonDTO treePoisonDTO1 = treePoisons.get(0);
+        treePoisonDTO1.setPoisonDTO(poisonTreeDTO1.getPoisonDTO());
+        treePoisons.set(0, treePoisonDTO1);
+
+        TreePoisonDTO treePoisonDTO2 = treePoisons.get(1);
+        treePoisonDTO2.setPoisonDTO(poisonTreeDTO2.getPoisonDTO());
+        treePoisons.set(1, treePoisonDTO2);
+
         try {
-            List<PoisonDTO> poisonDTOs = poisonService.get();
-            List<PoisonDTO> poisonDTOs1 = new ArrayList<PoisonDTO>();
-            List<PoisonDTO> poisonDTOs2 = new ArrayList<PoisonDTO>();
-
-            // Обновляем обратную связь между объектами PoisonDTO и TreeDTO
-            PoisonDTO poisonDTO1 = poisonDTOs.get(0);
-            List<TreeDTO> treeDTOs1 = new ArrayList<TreeDTO>();
-            treeDTOs1.add(treeDTOs.get(0));
-            poisonDTO1.setTreeDTOs(treeDTOs1);
-            poisonService.update(poisonDTO1);
-
-            PoisonDTO poisonDTO2 = poisonDTOs.get(1);
-            List<TreeDTO> treeDTOs2 = new ArrayList<TreeDTO>();
-            treeDTOs2.add(treeDTOs.get(1));
-            poisonDTO2.setTreeDTOs(treeDTOs2);
-            poisonService.update(poisonDTO2);
-
-            poisonDTOs1.add(poisonDTO1);
-            poisonDTOs2.add(poisonDTO2);
-
-            treeDTOs.get(0).setPoisonDTOs(poisonDTOs1);
-            treeDTOs.get(1).setPoisonDTOs(poisonDTOs2);
+            List<PoisonPestDTO> poisonPestDTOs = new ArrayList<PoisonPestDTO>();
+            poisonService.update(treePoisonDTOs1, poisonPestDTOs);
+            poisonService.update(treePoisonDTOs2, poisonPestDTOs);
 
         } catch (NoSuchObjectException e) {
-            e.printStackTrace();
+                e.printStackTrace();
         }
 
         try {
-            treeService.update(treeDTOs.get(0));
-            treeService.update(treeDTOs.get(1));
+            List<TreePoisonDTO> treePoisons1 = new ArrayList<TreePoisonDTO>();
+            treePoisons1.add(treePoisons.get(0));
+            treeService.update(treePoisons1);
+
+            List<TreePoisonDTO> treePoisons2 = new ArrayList<TreePoisonDTO>();
+            treePoisons2.add(treePoisons.get(1));
+            treeService.update(treePoisons2);
         } catch (NoSuchObjectException e) {
             e.printStackTrace();
         }
@@ -169,58 +173,59 @@ public class SaveServiceImpl implements SaveService{
 
     @Transactional
     public void updateStaticPoison() {
-        List<PoisonDTO> poisonDTOs = new ArrayList<PoisonDTO>();
+        List<TreePoisonDTO> treePoisonDTOs = new ArrayList<TreePoisonDTO>();
         try {
-            poisonDTOs = poisonService.get();
+            treePoisonDTOs = poisonService.getTreePoisons();
         } catch (NoSuchObjectException e) {
             e.printStackTrace();
         }
 
-        List<PestDTO> pestDTOs = new ArrayList<PestDTO>();
+        List<PoisonPestDTO> pestPoisons = new ArrayList<PoisonPestDTO>();
         try {
-            pestDTOs = pestService.get();
+            pestPoisons = pestService.get();
         } catch (NoSuchObjectException e) {
             e.printStackTrace();
         }
 
-        // Обновляем обратную связь между объектами PestDTO и PoisonDTO
-        for (int i = 0; i < pestDTOs.size(); i++) {
+        // Обновляем связи объекта PestDTO
+        for (int i = 0; i < pestPoisons.size(); i++) {
 
-            PestDTO pestDTO = pestDTOs.get(i);
-            List<PoisonDTO> poisonDTOs1 = new ArrayList<PoisonDTO>();
+            List<PoisonPestDTO> poisonPestDTOs = new ArrayList<PoisonPestDTO>();
+            PoisonPestDTO poisonPestDTO = new PoisonPestDTO();
+            poisonPestDTO.setPestDTO(pestPoisons.get(i).getPestDTO());
 
             if (i < 2){
-                poisonDTOs1.add(poisonDTOs.get(0));
+                poisonPestDTO.setPoisonDTO(treePoisonDTOs.get(0).getPoisonDTO());
             }
             else {
-                poisonDTOs1.add(poisonDTOs.get(1));
+                poisonPestDTO.setPoisonDTO(treePoisonDTOs.get(1).getPoisonDTO());
             }
 
-            pestDTO.setPoisonDTOs(poisonDTOs1);
+            poisonPestDTOs.add(poisonPestDTO);
 
             try {
-                pestService.update(pestDTO);
+                pestService.update(poisonPestDTOs);
             } catch (NoSuchObjectException e) {
                 e.printStackTrace();
             }
         }
 
-        List<PestDTO> pestDTOs1 = new ArrayList<PestDTO>();
-        pestDTOs1.add(pestDTOs.get(0));
-        pestDTOs1.add(pestDTOs.get(1));
-
-        List<PestDTO> pestDTOs2 = new ArrayList<PestDTO>();
-        pestDTOs2.add(pestDTOs.get(2));
-        pestDTOs2.add(pestDTOs.get(3));
-
-        poisonDTOs.get(0).setPestDTOs(pestDTOs1);
-        poisonDTOs.get(1).setPestDTOs(pestDTOs2);
-
-        try {
-            poisonService.update(poisonDTOs.get(0));
-            poisonService.update(poisonDTOs.get(1));
-        } catch (NoSuchObjectException e) {
-            e.printStackTrace();
+        // Обновляем связи объекта PoisonDTO
+        for (int i = 0; i <  2; ++i) {
+            List<PoisonPestDTO> poisonPestDTOs = new ArrayList<PoisonPestDTO>();
+            for (int j = i * 2; j < (i * 2) + 2; ++j) {
+                PoisonPestDTO poisonPestDTO = new PoisonPestDTO();
+                poisonPestDTO.setPoisonDTO(treePoisonDTOs.get(i).getPoisonDTO());
+                poisonPestDTO.setPestDTO(pestPoisons.get(j).getPestDTO());
+                poisonPestDTOs.add(poisonPestDTO);
+            }
+            List<TreePoisonDTO> treePoisonDTOs1 = new ArrayList<TreePoisonDTO>();
+            treePoisonDTOs1.add(treePoisonDTOs.get(i));
+            try {
+                poisonService.update(treePoisonDTOs1, poisonPestDTOs);
+            } catch (NoSuchObjectException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
