@@ -10,7 +10,6 @@ import com.about.java.service.exceptions.NoSuchObjectException;
 import com.about.java.service.exceptions.ObjectAlreadyExistsException;
 import com.about.java.service.interfaces.PestService;
 import com.about.java.service.interfaces.PoisonService;
-import com.about.java.util.Util;
 import org.hibernate.HibernateException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

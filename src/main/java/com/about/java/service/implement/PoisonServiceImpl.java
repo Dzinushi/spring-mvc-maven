@@ -37,9 +37,8 @@ public class PoisonServiceImpl implements PoisonService{
         if (treePoisonDTOs == null){
             throw new NullPointerException();
         }
-
-        for (TreePoisonDTO treePoisonDTO : treePoisonDTOs) {
-            if (poisonDAO.find(treePoisonDTO.getPoisonDTO().getName())) {
+        for (TreePoisonDTO treePoisonDTO : treePoisonDTOs){
+            if (poisonDAO.find(treePoisonDTO.getPoisonDTO().getName())){
                 return null;
             }
         }
@@ -194,7 +193,14 @@ public class PoisonServiceImpl implements PoisonService{
             }
         }
 
-        PoisonDTO poisonDTO = treePoisonDTOs.get(0).getPoisonDTO();
+        PoisonDTO poisonDTO;
+        if (treePoisonDTOs.size() == 0){
+            poisonDTO = poisonPestDTOs.get(0).getPoisonDTO();
+        }
+        else {
+            poisonDTO = treePoisonDTOs.get(0).getPoisonDTO();
+        }
+
         Poison poison = toPoison(poisonDTO);
         poison.setTrees(trees);
         poison.setPests(pests);
@@ -206,6 +212,15 @@ public class PoisonServiceImpl implements PoisonService{
         Poison poison = new Poison();
         poison.setId(poisonDTO.getId());
         poison.setName(poisonDTO.getName());
+
+        if (poisonDTO.getPestDTOs() != null){
+            Set<Pest> pests = new HashSet<Pest>();
+            for (PestDTO pestDTO : poisonDTO.getPestDTOs()){
+                Pest pest = pestService.toPest(pestDTO);
+                pests.add(pest);
+            }
+            poison.setPests(pests);
+        }
 
         return poison;
     }

@@ -3,6 +3,7 @@ package com.about.java.dao.implement;
 import com.about.java.dao.interfaces.PoisonDAO;
 import com.about.java.models.Poison;
 import com.about.java.service.exceptions.NoSuchObjectException;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ public class PoisonDAOImpl implements PoisonDAO{
 
     @Autowired
     private SessionFactory sessionFactory;
+
+    public PoisonDAOImpl() {
+    }
 
     public Long addPoison(Poison poison) {
         if (poison == null){

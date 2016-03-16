@@ -3,7 +3,7 @@ package com.about.java.dao.implement;
 import com.about.java.dao.interfaces.PestDAO;
 import com.about.java.models.Pest;
 import com.about.java.service.exceptions.NoSuchObjectException;
-import org.hibernate.Query;
+        import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -15,6 +15,9 @@ public class PestDAOImpl implements PestDAO{
 
     @Autowired
     private SessionFactory sessionFactory;
+
+    public PestDAOImpl() {
+    }
 
     public Long addPest(Pest pest) {
         if (pest == null){

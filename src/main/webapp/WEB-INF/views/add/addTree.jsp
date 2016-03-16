@@ -8,7 +8,7 @@
 </head>
 <body onload="createTable()">
 
-<form:form method="post" action="../add/applyTree">
+<form:form method="post" action="../">
     <h3>Название</h3>
     <input type="text" name="name">
     <h3>Высота</h3>

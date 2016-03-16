@@ -2,6 +2,8 @@ package com.about.java.controllers;
 
 import com.about.java.dto.PestDTO;
 import com.about.java.dto.PoisonDTO;
+import com.about.java.dto.PoisonPestDTO;
+import com.about.java.dto.TreePoisonDTO;
 import com.about.java.service.exceptions.NoSuchObjectException;
 import com.about.java.service.exceptions.ObjectAlreadyExistsException;
 import com.about.java.service.interfaces.PestService;
@@ -50,40 +52,41 @@ public class PoisonController {
         return "redirect:../details/detailsPoisons";
     }
 
-//    @RequestMapping(value = "details/detailsPoisons", method = RequestMethod.POST)
-//    public String add(@RequestParam("name") String name,
-//                      @RequestParam("idPests") List<Long> idPests,
-//                      ModelMap modelMap) throws NoSuchObjectException {
-//        PoisonDTO poison = new PoisonDTO();
-//        poison.setName(name);
-//
-//        List<PestDTO> pestDTOs = new ArrayList<PestDTO>();
-//        for (Long idPest : idPests) {
-//            PestDTO pestDTO = pestService.get(idPest);
-//            pestDTOs.add(pestDTO);
-//        }
-//
-//        poison.setPestDTOs(pestDTOs);
-//
-//        try {
-//            poisonService.add(poison);
-//            List<PoisonDTO> poisonDTOs = poisonService.getTreePoisons();
-//            modelMap.addAttribute("poisons", poisonDTOs);
-//        } catch (ObjectAlreadyExistsException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return "details/detailsPoisons";
-//    }
-//
-//    @RequestMapping(value = "details/applyPoisons")
-//    public String apply(@RequestParam(value = "checkedPoisons") List<Long> idPoisons, ModelMap modelMap) throws NoSuchObjectException {
-//        List<PoisonDTO> pestDTOs = new ArrayList<PoisonDTO>();
-//        for (Long idPoison : idPoisons) {
-//            PoisonDTO poisonDTO = poisonService.getTreePoisons(idPoison);
-//            pestDTOs.add(poisonDTO);
-//        }
-//        modelMap.addAttribute("poisons", pestDTOs);
-//        return "add/addTree";
-//    }
+    @RequestMapping(value = "details/detailsPoisons", method = RequestMethod.POST)
+    public String add(@RequestParam("name") String name,
+                      @RequestParam("idPests") List<Long> idPests,
+                      ModelMap modelMap) throws NoSuchObjectException {
+        PoisonDTO poisonDTO = new PoisonDTO();
+        poisonDTO.setName(name);
+
+        List<PoisonPestDTO> poisonPestDTOs = new ArrayList<PoisonPestDTO>();
+        for (Long idPest : idPests) {
+            PoisonPestDTO poisonPestDTO = new PoisonPestDTO();
+            poisonPestDTO.setPoisonDTO(poisonDTO);
+            PestDTO pestDTO = pestService.getByID(idPest);
+            poisonPestDTO.setPestDTO(pestDTO);
+            poisonPestDTOs.add(poisonPestDTO);
+        }
+
+        try {
+            poisonService.add(new ArrayList<TreePoisonDTO>(), poisonPestDTOs);
+            List<PoisonDTO> poisonDTOs = poisonService.getAll();
+            modelMap.addAttribute("poisons", poisonDTOs);
+        } catch (ObjectAlreadyExistsException e) {
+            e.printStackTrace();
+        }
+
+        return "details/detailsPoisons";
+    }
+
+    @RequestMapping(value = "details/applyPoisons")
+    public String apply(@RequestParam(value = "checkedPoisons") List<Long> idPoisons, ModelMap modelMap) throws NoSuchObjectException {
+        List<PoisonDTO> poisonDTOs = new ArrayList<PoisonDTO>();
+        for (Long idPoison : idPoisons) {
+            PoisonDTO poisonDTO = poisonService.getByID(idPoison);
+            poisonDTOs.add(poisonDTO);
+        }
+        modelMap.addAttribute("poisons", poisonDTOs);
+        return "add/addTree";
+    }
 }

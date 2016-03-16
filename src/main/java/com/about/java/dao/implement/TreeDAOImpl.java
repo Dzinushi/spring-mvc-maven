@@ -3,6 +3,7 @@ package com.about.java.dao.implement;
 import com.about.java.dao.interfaces.TreeDAO;
 import com.about.java.models.Tree;
 import com.about.java.service.exceptions.NoSuchObjectException;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,12 @@ public class TreeDAOImpl implements TreeDAO {
 
     @Autowired
     private SessionFactory sessionFactory;
+
+    public TreeDAOImpl(BasicDataSource basicDataSource) {
+    }
+
+    public TreeDAOImpl() {
+    }
 
     public Long addTree(Tree tree) {
         if (tree == null){
