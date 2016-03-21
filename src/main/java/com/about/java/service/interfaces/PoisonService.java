@@ -17,6 +17,7 @@ public interface PoisonService {
     List<PoisonPestDTO> getPoisonPests(Long id) throws NoSuchObjectException;
     List<PoisonPestDTO> getPoisonPests() throws NoSuchObjectException;
     PoisonDTO getByID(Long id) throws NoSuchObjectException;
+    PoisonDTO getByName(String name);
     List<PoisonDTO> getAll() throws NoSuchObjectException;
     void delete(Long id) throws NoSuchObjectException;
     Poison toPoison(PoisonDTO poisonDTO);

@@ -127,6 +127,21 @@ public class PoisonServiceImpl implements PoisonService{
     }
 
     @Transactional
+    public PoisonDTO getByName(String name) {
+        PoisonDTO poisonDTO = null;
+        if (name != null) {
+            Poison poison = poisonDAO.getPoison(name);
+            try {
+                poisonDTO = toPoisonDTO(poison);
+            } catch (NoSuchObjectException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return poisonDTO;
+    }
+
+    @Transactional
     public List<PoisonDTO> getAll() throws NoSuchObjectException {
         List<PoisonPestDTO> poisonPestDTOs = getPoisonPests();
         List<PoisonDTO> poisonDTOs = new ArrayList<PoisonDTO>();

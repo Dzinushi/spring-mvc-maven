@@ -49,6 +49,7 @@ public class MainController {
         }
 
         Set<TreeDTO> treeDTOs = new HashSet<TreeDTO>();
+        assert treePoisonDTOs != null;
         for (TreePoisonDTO treePoisonDTO : treePoisonDTOs){
             treeDTOs.add(treePoisonDTO.getTreeDTO());
         }

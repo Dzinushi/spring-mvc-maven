@@ -1,7 +1,5 @@
 package com.about.java.models;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
 import javax.persistence.*;
 
 @Entity

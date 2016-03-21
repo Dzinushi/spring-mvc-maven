@@ -17,7 +17,7 @@ public class Poison {
     private Long id;
 
     @NotNull
-    @Size(max = 50)
+    @Size(min = 2, max = 50)
     @Column(name = "name")
     private String name;
 

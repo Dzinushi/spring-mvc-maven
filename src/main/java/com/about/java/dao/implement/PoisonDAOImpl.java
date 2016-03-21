@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class PoisonDAOImpl implements PoisonDAO{
@@ -52,6 +53,15 @@ public class PoisonDAOImpl implements PoisonDAO{
             throw new NullPointerException();
         }
         return (Poison) sessionFactory.getCurrentSession().get(Poison.class, id);
+    }
+
+    public Poison getPoison(String poisonName) {
+        if (poisonName.length() == 0){
+            throw new NullPointerException();
+        }
+        Query query = sessionFactory.getCurrentSession().createQuery("from Poison where name=:poisonName");
+        query.setParameter("poisonName", poisonName);
+        return (Poison) query.list().get(0);
     }
 
     public List<Poison> getPoison() {

@@ -2,6 +2,7 @@ package com.about.java.models;
 
 import com.sun.istack.internal.NotNull;
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
@@ -15,11 +16,12 @@ public class Tree {
     private Long id;
 
     @NotNull
-    @Size(max = 20)
+    @Size(min = 2, max = 20)
     @Column(name = "name")
     private String name;
 
     @NotNull
+    @Size(min = 2, max = 20)
     @Column(name = "height")
     private String height;
 

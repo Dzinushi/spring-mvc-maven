@@ -10,6 +10,7 @@ public interface PoisonDAO {
     Long addPoison(Poison poison);
     Long updatePoison(Poison poison) throws NoSuchObjectException;
     Poison getPoison(Long id);
+    Poison getPoison(String name);
     List<Poison> getPoison();
     void deletePoison(Long id) throws NoSuchObjectException;
     boolean find(String name);
