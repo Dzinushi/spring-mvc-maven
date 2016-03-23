@@ -38,6 +38,8 @@
 
         <hsqldb.version>2.3.3</hsqldb.version>
 
+        <jackson.version>1.8.2</jackson.version>
+
     </properties>
 
     <dependencies>
@@ -216,14 +218,21 @@
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.8.2</version>
+            <version>${jackson.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-core-asl</artifactId>
-            <version>1.8.2</version>
+            <version>${jackson.version}</version>
         </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>org.codehaus.jackson</groupId>-->
+            <!--<artifactId>jackson-databind</artifactId>-->
+            <!--<version>${jackson.version}</version>-->
+        <!--</dependency>-->
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

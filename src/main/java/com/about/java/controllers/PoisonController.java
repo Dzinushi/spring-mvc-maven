@@ -52,10 +52,9 @@ public class PoisonController {
         return "redirect:../details/detailsPoisons";
     }
 
-    @RequestMapping(value = "details/detailsPoisons", method = RequestMethod.POST)
+    @RequestMapping(value = "add/newPoison", method = RequestMethod.POST)
     public String add(@RequestParam("name") String name,
-                      @RequestParam("idPests") List<Long> idPests,
-                      ModelMap modelMap) throws NoSuchObjectException {
+                      @RequestParam("idPests") List<Long> idPests) throws NoSuchObjectException {
         PoisonDTO poisonDTO = new PoisonDTO();
         poisonDTO.setName(name);
 
@@ -70,13 +69,11 @@ public class PoisonController {
 
         try {
             poisonService.add(new ArrayList<TreePoisonDTO>(), poisonPestDTOs);
-            List<PoisonDTO> poisonDTOs = poisonService.getAll();
-            modelMap.addAttribute("poisons", poisonDTOs);
         } catch (ObjectAlreadyExistsException e) {
             e.printStackTrace();
         }
 
-        return "details/detailsPoisons";
+        return "redirect:../details/detailsPoisons";
     }
 
     @RequestMapping(value = "details/applyPoisons")

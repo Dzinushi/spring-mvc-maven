@@ -6,31 +6,29 @@
     <h2>Виды вредителей</h2>
 </head>
 <body>
-
-    <table border="1" cellspacing="1" cellpadding="3">
-        <c:forEach items="${pests}" var="pest">
-            <tr>
-                <td>${pest.name}</td>
-
+ <table border="1" cellspacing="1" cellpadding="3">
+     <c:forEach items="${pests}" var="pest">
+         <tr>
+             <td>${pest.name}</td>
                 <td>
                     <label>
                         <input type="checkbox" name="checkedPests" value="${pest.id}">
                     </label>
                 </td>
 
-                <form:form method="post" action="../update/updatePest">
-                    <input type="hidden" name="id" value="${pest.id}">
-                    <input type="hidden" name="name" value="${pest.name}">
-                    <td><input type="submit" value="Обновить"></td>
-                </form:form>
+             <form:form method="post" action="../update/updatePest">
+                 <input type="hidden" name="id" value="${pest.id}">
+                 <input type="hidden" name="name" value="${pest.name}">
+                 <td><input type="submit" value="Обновить"></td>
+             </form:form>
 
-                <form:form method="post" action="../delete/deletePest">
-                    <input type="hidden" name="id" value="${pest.id}">
-                    <td><input type="submit" value="Удалить"></td>
-                </form:form>
-            </tr>
-        </c:forEach>
-    </table>
+             <form:form method="post" action="../delete/deletePest">
+                 <input type="hidden" name="id" value="${pest.id}">
+                 <td><input type="submit" value="Удалить"></td>
+             </form:form>
+         </tr>
+     </c:forEach>
+ </table>
     <br>
     <form:form method="post" action="../details/applyPests" onsubmit="return checked()">
         <input type="hidden" id="pests_id" name="pests" value="">
@@ -52,7 +50,7 @@
                 checked.push(checkBox[i].value);
             }
         }
-        document.getElementById('pests_id').value = JSON.stringify(checked);
+        document.getElementById('pests_id').value = checked;
     }
 </script>
 

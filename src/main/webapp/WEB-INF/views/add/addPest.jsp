@@ -6,7 +6,7 @@
 </head>
 <body>
 <h3>Название</h3>
-<form:form method="post" action="../details/detailsPests" onsubmit="return validateForm()">
+<form:form method="post" action="../add/newPest" onsubmit="return validateForm()">
     <input type="text" id="name_id" name="name"> <span style='color:red' id='nameV_id'></span>
     <br>
     <br>
@@ -24,6 +24,9 @@
         else if (regExp.test(name) == false){
             document.getElementById("name" + "V_id").innerHTML = '(*) поле должно содержать только буквы русского алфавита в количестве от 2 до 15';
             return false;
+        }
+        else {
+            document.getElementById("name" + "V_id").innerHTML = '';
         }
         return true;
     }

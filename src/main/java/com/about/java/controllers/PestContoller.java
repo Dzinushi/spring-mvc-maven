@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,39 +56,28 @@ public class PestContoller {
         return "redirect:../details/detailsPests";
     }
 
-    @RequestMapping(value = "details/detailsPests", method = RequestMethod.POST)
-    public String add(@RequestParam(value = "name") String name, ModelMap modelMap) throws ObjectAlreadyExistsException {
+    @RequestMapping(value = "add/newPest", method = RequestMethod.POST)
+    public String add(@RequestBody PestDTO pestDTO) throws ObjectAlreadyExistsException {
         List<PoisonPestDTO> poisonPestDTOs = new ArrayList<PoisonPestDTO>();
         PoisonPestDTO poisonPestDTO = new PoisonPestDTO();
-        PestDTO pestDTO = new PestDTO();
-        pestDTO.setName(name);
+//        PestDTO pestDTO = new PestDTO();
+//        pestDTO.setName(name);
         poisonPestDTO.setPestDTO(pestDTO);
         poisonPestDTOs.add(poisonPestDTO);
         pestService.add(poisonPestDTOs);
 
-        try {
-            Set<PestDTO> pestDTOList = pestService.getAll();
-            modelMap.addAttribute("pests", pestDTOList);
-        } catch (NoSuchObjectException e) {
-            e.printStackTrace();
-        }
-
-        return "details/detailsPests";
+        return "redirect:../details/detailsPests";
     }
 
-    @RequestMapping(value = "details/applyPests")
-    public String apply(@RequestParam(value = "pests") List<String> idPests, ModelMap modelMap) throws NoSuchObjectException {
+    @RequestMapping(value = "details/applyPests", method = RequestMethod.POST)
+    public String apply(@RequestParam(value = "pests") List<Long> idPests, ModelMap modelMap) throws NoSuchObjectException {
         List<PestDTO> pestDTOs = new ArrayList<PestDTO>();
-        List<Long> ids = new ArrayList<Long>();
-        for (String idPest : idPests) {
-            idPest = idPest.replaceAll("\\D", "");
-            ids.add(Long.valueOf(idPest));
-        }
-        for (Long id : ids) {
-            PestDTO pest = pestService.getByID(id);
+        for (Long idPest : idPests) {
+            PestDTO pest = pestService.getByID(idPest);
             pestDTOs.add(pest);
         }
         modelMap.addAttribute("pests", pestDTOs);
+
         return "add/addPoison";
     }
 
@@ -114,7 +104,7 @@ public class PestContoller {
     }
 
     @RequestMapping(value = "applyUpdate")
-    public void update(@RequestParam(value = "id") Long id,
+    public String update(@RequestParam(value = "id") Long id,
                        @RequestParam(value = "name") String name,
                        @RequestParam(value = "poisonNames") List<String> poisons){
         List<PoisonPestDTO> poisonPestDTOs = new ArrayList<PoisonPestDTO>();
@@ -137,5 +127,7 @@ public class PestContoller {
         } catch (NoSuchObjectException e) {
             e.printStackTrace();
         }
+
+        return "redirect:details/detailsPests";
     }
 }

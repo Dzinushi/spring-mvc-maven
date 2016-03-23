@@ -26,18 +26,22 @@ public class MainController {
     @Autowired
     private SaveService saveService;
 
+    boolean created = false;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView mainpage() {
 
         // Создание тестовых данных
-        try {
-            saveService.addStaticTree();
-            saveService.addStaticPoison();
-            saveService.addStaticPest();
-        } catch (ObjectAlreadyExistsException e) {
-            e.printStackTrace();
+        if (!created) {
+            try {
+                saveService.addStaticTree();
+                saveService.addStaticPoison();
+                saveService.addStaticPest();
+            } catch (ObjectAlreadyExistsException e) {
+                e.printStackTrace();
+            }
+            created = true;
         }
-
         // Получение всех видов деревьев из таблицы
         ModelAndView mav = new ModelAndView("main");
 

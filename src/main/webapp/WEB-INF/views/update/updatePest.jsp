@@ -31,7 +31,7 @@
             var cell1 = row.insertCell(1);
             cell0.innerHTML = "<select name='poisonNames'>" +
                     "<c:forEach items='${allPoisons}' var='poison'>" +
-                    "<option value='${poison.name}' ${pest.poisonDTOs.get(j).name == poison.name ? 'selected = "selected"' : ''}>${poison.name}</option>" +
+                    "<option value='${poison.name}' ${pest.poisonDTOs.get(j).name == poison.name ? 'selected = selected' : ''}>${poison.name}</option>" +
                     "</c:forEach>" +
                     "</select>";
             cell1.innerHTML = "<input type='button' value='Удалить' onclick='deleteLink(" + j + ")'>";

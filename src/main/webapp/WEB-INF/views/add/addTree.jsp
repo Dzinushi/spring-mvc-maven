@@ -8,15 +8,17 @@
 </head>
 <body onload="createTable()">
 
-<form:form method="post" action="../">
+<form:form method="post" action="../" onsubmit="return validateForm()">
     <h3>Название</h3>
-    <input type="text" name="name">
+    <input type="text" id="name_id" name="name">            <span style='color:red' id='nameV_id'></span>
     <h3>Высота</h3>
-    <input type="text" name="height">
+    <input type="text" id="height_id" name="height">        <span style='color:red' id='heightV_id'></span>
     <h3>Описание</h3>
-    <input type="text" name="describe">
+    <textarea id="describe_id" name="describe"></textarea>
+    <%--<input type="text" name="describe">--%>
     <h3>Уход</h3>
-    <input type="text" name="care">
+    <textarea id="care_id" name="care"></textarea>
+    <%--<input type="text" name="care">--%>
     <h3>Отрава для вредителей</h3>
 
     <table border="1" cellspacing="3" cellpadding="1">
@@ -45,32 +47,42 @@
     <input type="submit" value="Выбрать отраву">
 </form:form>
 
-<%--<script type="text/javascript">--%>
-    <%--function createTable() {--%>
-        <%--var myTable = document.getElementById("poisonTable");--%>
-        <%--var table = document.createElement("table");--%>
-        <%--var tableBody = document.createElement("tbody");--%>
+<script type="text/javascript">
+    function validateForm() {
+        var name = document.getElementById("name" + "_id").value;
+        var regExpName = new RegExp("^[А-Яа-я ]{2,15}$");
+        var result = true;
 
-        <%--// Формирование шапки таблицы--%>
-        <%--for (var j = 0; j < 2; ++j){--%>
-            <%--var row = document.createElement("tr");--%>
-            <%--var cellTh = document.createElement("th");--%>
-            <%--var cellText = document.createTextNode("Название отравы");--%>
-            <%--cellTh.appendChild(cellText);--%>
-            <%--row.appendChild(cellTh);--%>
-            <%--cellTh = document.createElement("th");--%>
-            <%--cellText = document.createTextNode("Вредители");--%>
-            <%--cellTh.appendChild(cellText);--%>
-            <%--row.appendChild(cellTh);--%>
-            <%--tableBody.appendChild(row);--%>
-            <%--break;--%>
-        <%--}--%>
+        if (name.length == 0){
+            document.getElementById("name" + "V_id").innerHTML = '(*) обязательное поле';
+            result = false;
+        }
+        else if (regExpName.test(name) == false){
+            document.getElementById("name" + "V_id").innerHTML = '(*) поле должно содержать только буквы русского алфавита в количестве от 2 до 15';
+            result = false;
+        }
+        else {
+            document.getElementById("name" + "V_id").innerHTML = '';
+        }
 
-        <%--table.appendChild(tableBody);--%>
-        <%--table.setAttribute("border", "1");--%>
-        <%--myTable.appendChild(table);--%>
-    <%--}--%>
-<%--</script>--%>
+        var height = document.getElementById("height" + "_id").value;
+        var regExpHeight = new RegExp("[0-9]{1,3}[А-Яа-я ]{0,2}-[0-9]{1,3}[А-Яа-я ]{1,2}");
+
+        if (height.length == 0){
+            document.getElementById("height" + "V_id").innerHTML = '(*) обязательное поле';
+            result = false;
+        }
+        else if (regExpHeight.test(height) == false){
+            document.getElementById("height" + "V_id").innerHTML = '(*) данные должны быть введены в виде "15-20м" или "15м-20м"';
+            result = false;
+        }
+        else {
+            document.getElementById("height" + "V_id").innerHTML = '';
+        }
+
+        return result;
+    }
+</script>
 
 </body>
 </html>
