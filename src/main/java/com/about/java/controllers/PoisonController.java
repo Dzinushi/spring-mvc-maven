@@ -8,6 +8,7 @@ import com.about.java.service.exceptions.NoSuchObjectException;
 import com.about.java.service.exceptions.ObjectAlreadyExistsException;
 import com.about.java.service.interfaces.PestService;
 import com.about.java.service.interfaces.PoisonService;
+import com.about.java.service.interfaces.TreeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 @Controller
@@ -76,8 +78,85 @@ public class PoisonController {
         return "redirect:../details/detailsPoisons";
     }
 
+    @RequestMapping(value = "update/updatePoison", method = RequestMethod.GET)
+    public ModelAndView update(@RequestParam(value = "id") Long id){
+        PoisonDTO poisonDTO = null;
+        try {
+            poisonDTO = poisonService.getByID(id);
+        } catch (NoSuchObjectException e) {
+            e.printStackTrace();
+        }
+
+        Set<PestDTO> pestDTOs = null;
+        try {
+            pestDTOs = pestService.getAll();
+        } catch (NoSuchObjectException e) {
+            e.printStackTrace();
+        }
+
+        ModelAndView mav = new ModelAndView("update/updatePoison");
+        mav.addObject("poison", poisonDTO);
+        mav.addObject("allPests", pestDTOs);
+
+        return mav;
+    }
+
+    @RequestMapping(value = "update/updatePoison/applyUpdate")
+    public String update(@RequestParam(value = "id") Long id,
+                         @RequestParam(value = "name") String name,
+                         @RequestParam(value = "pests") List<String> pests){
+
+        // создаем новые наборы данных между сущностями PoisonDTO и PestDTO
+        List<PoisonPestDTO> poisonPestDTOs = new ArrayList<PoisonPestDTO>();
+        for (String pest : pests) {
+            PoisonPestDTO poisonPestDTO = new PoisonPestDTO();
+
+            PoisonDTO poisonDTO = new PoisonDTO();
+            poisonDTO.setId(id);
+            poisonDTO.setName(name);
+            poisonPestDTO.setPoisonDTO(poisonDTO);
+
+            PestDTO pestDTO = pestService.getByName(pest);
+            poisonPestDTO.setPestDTO(pestDTO);
+
+            poisonPestDTOs.add(poisonPestDTO);
+        }
+
+        // формируем PoisonDTO-объект со связями на объекты PestDTO
+        PoisonDTO poisonDTO = new PoisonDTO();
+        poisonDTO.setId(id);
+        poisonDTO.setName(name);
+        List<PestDTO> pestDTOs = new ArrayList<PestDTO>();
+        for (String pest1 : pests) {
+            PestDTO pestDTO = new PestDTO();
+            pestDTO.setName(pest1);
+            pestDTOs.add(pestDTO);
+        }
+        poisonDTO.setPestDTOs(pestDTOs);
+
+        // получаем наборы данных между сущностями TreeDTO и PoisonDTO
+        List<TreePoisonDTO> treePoisonDTOs = null;
+        try {
+            treePoisonDTOs = poisonService.getTreePoisons(id);
+        } catch (NoSuchObjectException e) {
+            e.printStackTrace();
+        }
+        assert treePoisonDTOs != null;
+        for (TreePoisonDTO treePoisonDTO : treePoisonDTOs) {
+            treePoisonDTO.setPoisonDTO(poisonDTO);
+        }
+
+        try {
+            poisonService.update(treePoisonDTOs, poisonPestDTOs);
+        } catch (NoSuchObjectException e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:../../details/detailsPoisons";
+    }
+
     @RequestMapping(value = "details/applyPoisons")
-    public String apply(@RequestParam(value = "checkedPoisons") List<Long> idPoisons, ModelMap modelMap) throws NoSuchObjectException {
+    public String apply(@RequestParam(value = "poisons") List<Long> idPoisons, ModelMap modelMap) throws NoSuchObjectException {
         List<PoisonDTO> poisonDTOs = new ArrayList<PoisonDTO>();
         for (Long idPoison : idPoisons) {
             PoisonDTO poisonDTO = poisonService.getByID(idPoison);

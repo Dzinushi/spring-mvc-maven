@@ -57,11 +57,11 @@ public class PestContoller {
     }
 
     @RequestMapping(value = "add/newPest", method = RequestMethod.POST)
-    public String add(@RequestBody PestDTO pestDTO) throws ObjectAlreadyExistsException {
+    public String add(@RequestParam(value = "name") String name) throws ObjectAlreadyExistsException {
         List<PoisonPestDTO> poisonPestDTOs = new ArrayList<PoisonPestDTO>();
         PoisonPestDTO poisonPestDTO = new PoisonPestDTO();
-//        PestDTO pestDTO = new PestDTO();
-//        pestDTO.setName(name);
+        PestDTO pestDTO = new PestDTO();
+        pestDTO.setName(name);
         poisonPestDTO.setPestDTO(pestDTO);
         poisonPestDTOs.add(poisonPestDTO);
         pestService.add(poisonPestDTOs);
@@ -97,29 +97,22 @@ public class PestContoller {
         ModelAndView mav = new ModelAndView("update/updatePest");
         mav.addObject("pest", pestDTO);
 
-        List<PoisonDTO> allPoisons = poisonService.getAll();
-        mav.addObject("allPoisons", allPoisons);
-
         return mav;
     }
 
-    @RequestMapping(value = "applyUpdate")
+    @RequestMapping(value = "update/updatePest/applyUpdate")
     public String update(@RequestParam(value = "id") Long id,
-                       @RequestParam(value = "name") String name,
-                       @RequestParam(value = "poisonNames") List<String> poisons){
-        List<PoisonPestDTO> poisonPestDTOs = new ArrayList<PoisonPestDTO>();
-        for (String poison : poisons) {
-            PoisonPestDTO poisonPestDTO = new PoisonPestDTO();
+                       @RequestParam(value = "name") String name){
+        List<PoisonPestDTO> poisonPestDTOs = null;
+        try {
+            poisonPestDTOs = pestService.get(id);
+        } catch (NoSuchObjectException e) {
+            e.printStackTrace();
+        }
 
-            PestDTO pestDTO = new PestDTO();
-            pestDTO.setId(id);
-            pestDTO.setName(name);
-            poisonPestDTO.setPestDTO(pestDTO);
-
-            PoisonDTO poisonDTO = poisonService.getByName(poison);
-            poisonPestDTO.setPoisonDTO(poisonDTO);
-
-            poisonPestDTOs.add(poisonPestDTO);
+        assert poisonPestDTOs != null;
+        for (PoisonPestDTO poisonPestDTO : poisonPestDTOs) {
+            poisonPestDTO.getPestDTO().setName(name);
         }
 
         try {
@@ -128,6 +121,6 @@ public class PestContoller {
             e.printStackTrace();
         }
 
-        return "redirect:details/detailsPests";
+        return "redirect:../../details/detailsPests";
     }
 }

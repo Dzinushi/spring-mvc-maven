@@ -91,6 +91,17 @@ public class PestServiceImpl implements PestService{
     }
 
     @Transactional
+    public PestDTO getByName(String name) {
+        PestDTO pestDTO = null;
+        if (name != null) {
+            Pest pest = pestDAO.getPest(name);
+            pestDTO = toPestDTO(pest);
+        }
+
+        return pestDTO;
+    }
+
+    @Transactional
     public Set<PestDTO> getAll() throws NoSuchObjectException {
         List<PoisonPestDTO> poisonPestDTOs = get();
         Set<PestDTO> pestDTOs = new HashSet<PestDTO>();

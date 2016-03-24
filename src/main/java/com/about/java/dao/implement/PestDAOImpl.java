@@ -49,6 +49,15 @@ public class PestDAOImpl implements PestDAO{
         return (Pest) sessionFactory.getCurrentSession().get(Pest.class, id);
     }
 
+    public Pest getPest(String pestName) {
+        if (pestName.length() == 0){
+            throw new NullPointerException();
+        }
+        Query query = sessionFactory.getCurrentSession().createQuery("from Pest where name=:pestName");
+        query.setParameter("pestName", pestName);
+        return (Pest) query.list().get(0);
+    }
+
     public List<Pest> getPest() {
         Query query = sessionFactory.getCurrentSession().createQuery("from Pest");
         return query.list();

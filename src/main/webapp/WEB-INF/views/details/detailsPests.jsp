@@ -36,7 +36,6 @@
     </form:form>
 
 <form:form method="post" action="../add/addPest">
-    <br>
     <input type="submit" value="Добавить">
 </form:form>
 

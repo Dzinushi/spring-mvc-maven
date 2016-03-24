@@ -13,6 +13,8 @@
     <input type="submit" value="Подтвердить">
 </form:form>
 
+<script src="../validate/pest.js"></script>
+
 <script type="text/javascript">
     function validateForm() {
         var name = document.getElementById("name" + "_id").value;

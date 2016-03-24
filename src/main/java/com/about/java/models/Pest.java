@@ -51,8 +51,14 @@ public class Pest {
     }
 
     public void copy(Pest pest){
-        setId(pest.getId());
-        setName(pest.getName());
-        setPoisons(pest.getPoisons());
+        if (pest.getId() != null){
+            setId(pest.getId());
+        }
+        if (pest.getName() != null) {
+            setName(pest.getName());
+        }
+        if (pest.getPoisons() != null) {
+            setPoisons(pest.getPoisons());
+        }
     }
 }

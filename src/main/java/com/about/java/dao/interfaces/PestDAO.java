@@ -10,7 +10,9 @@ public interface PestDAO {
     Long addPest(Pest pest);
     Long updatePest(Pest pest) throws NoSuchObjectException;
     Pest getPest(Long id);
+    Pest getPest(String name);
     List<Pest> getPest();
     void deletePest(Long id) throws NoSuchObjectException;
     boolean find(String name);
+
 }

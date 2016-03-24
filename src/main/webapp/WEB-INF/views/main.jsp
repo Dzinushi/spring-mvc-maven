@@ -6,7 +6,7 @@
 <body>
 <c:import url="/WEB-INF/style/table.css"/>
 
-<h2>Garden</h2>
+<h2>Сад</h2>
 <table border="1" cellpadding="3" >
     <tr>
         <th align="center">Виды</th>
