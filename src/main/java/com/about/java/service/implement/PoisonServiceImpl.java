@@ -246,6 +246,15 @@ public class PoisonServiceImpl implements PoisonService{
         poisonDTO.setName(poison.getName());
 //                poisonDTO.setType(poison.getType());
 
+        if (poison.getPests() != null){
+            List<PestDTO> pestDTOs = new ArrayList<PestDTO>();
+            for (Pest pest : poison.getPests()) {
+                PestDTO pestDTO = pestService.toPestDTO(pest);
+                pestDTOs.add(pestDTO);
+            }
+            poisonDTO.setPestDTOs(pestDTOs);
+        }
+
         return poisonDTO;
     }
 

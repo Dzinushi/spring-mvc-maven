@@ -101,7 +101,7 @@ public class PoisonController {
         return mav;
     }
 
-    @RequestMapping(value = "update/updatePoison/applyUpdate")
+    @RequestMapping(value = "update/updatePoison/applyUpdate", method = RequestMethod.POST)
     public String update(@RequestParam(value = "id") Long id,
                          @RequestParam(value = "name") String name,
                          @RequestParam(value = "pests") List<String> pests){

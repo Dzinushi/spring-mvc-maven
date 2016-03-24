@@ -9,8 +9,8 @@
     <input type="hidden" name="id" value="${poison.id}">
     <h3>Имя</h3>
     <input type="text" id="name_id" name="name" value="${poison.name}"> <span style='color:red' id='nameV_id'></span>
-    <h3>Подвержен действию следующих ядов</h3>
-    <table id="pestPoisonTable" border="1" cellspacing="1" cellpadding="3">
+    <h3>Эффективен против вредителей</h3>
+    <table id="pestTable" border="1" cellspacing="1" cellpadding="3">
     </table>
     <br>
     <input type="button" value="Добавить связь" onclick="addLink()">
@@ -27,16 +27,16 @@
     poison.name = "${poison.name}";
     poison.pests = new Array();
     <c:forEach items="${poison.pestDTOs}" var="pestDTO">
-    var pestDTO = new Object();
-    pestDTO.name = '${pestDTO.name}';
-    poison.pests.push(pestDTO);
+        var pestDTO = new Object();
+        pestDTO.name = '${pestDTO.name}';
+        poison.pests.push(pestDTO);
     </c:forEach>
 
-    var pests = new Array();
+    var allPests = new Array();
     <c:forEach items="${allPests}" var="pest">
-    var pest = new Object();
-    pest.name = '${pest.name}';
-    pests.push(pest);
+        var pest = new Object();
+        pest.name = '${pest.name}';
+        allPests.push(pest);
     </c:forEach>
 
     function validateForm() {
@@ -56,7 +56,7 @@
         return true;
     }
     function createTable() {
-        var table = document.getElementById("pestPoisonTable");
+        var table = document.getElementById("pestTable");
         trN = ${poison.pestDTOs.size()};
 
         for (var j = 0; j < poison.pests.length; ++j){
@@ -67,12 +67,12 @@
             var cell1 = row.insertCell(1);
 
             var select = document.createElement("select");
-            select.name = "pests";
-            for (var i = 0; i < pests.length; ++i){
+            select.name = "allPests";
+            for (var i = 0; i < allPests.length; ++i){
                 var option = document.createElement("option");
-                option.value = pests[i].name;
-                option.selected = poison.pests[j].name.localeCompare(pests[i].name) == 0 ? 'selected = selected' : '';
-                option.text = pests[i].name;
+                option.value = allPests[i].name;
+                option.selected = poison.pests[j].name.localeCompare(allPests[i].name) == 0 ? 'selected = selected' : '';
+                option.text = allPests[i].name;
                 select.appendChild(option);
             }
             cell0.appendChild(select);
@@ -94,11 +94,11 @@
         var cell1 = row.insertCell(1);
 
         var select = document.createElement("select");
-        select.name = "pests";
-        for (var i = 0; i < pests.length; ++i){
+        select.name = "allPests";
+        for (var i = 0; i < allPests.length; ++i){
             var option = document.createElement("option");
-            option.value = pests[i].name;
-            option.text = pests[i].name;
+            option.value = allPests[i].name;
+            option.text = allPests[i].name;
             select.appendChild(option);
         }
         cell0.appendChild(select);

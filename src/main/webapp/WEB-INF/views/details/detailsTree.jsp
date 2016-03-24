@@ -28,7 +28,8 @@ ${tree.careDTO.describe}
     </c:forEach>
 </table>
 <br>
-<form method="post" action="details/updateTree">
+<form method="get" action="../update/updateTree">
+    <input type="hidden" name="id" value="${tree.id}">
     <input type="submit" value="Изменить">
 </form>
 </body>

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,9 +39,60 @@ public class TreeManagerController {
         return mav;
     }
 
-    @RequestMapping(value = "details/updateTree", method = RequestMethod.POST)
-    public String update(){
-        return "redirect:";
+    @RequestMapping(value = "update/updateTree", method = RequestMethod.GET)
+    public ModelAndView update(@RequestParam(value = "id") Long id){
+        TreeDTO treeDTO = null;
+        List<PoisonDTO> poisonDTOs = null;
+        try {
+            treeDTO = treeService.getByID(id);
+            poisonDTOs = poisonService.getAll();
+        } catch (NoSuchObjectException e) {
+            e.printStackTrace();
+        }
+        ModelAndView mav = new ModelAndView("update/updateTree");
+        mav.addObject("tree", treeDTO);
+        mav.addObject("allPoisons", poisonDTOs);
+
+        return mav;
+    }
+
+    @RequestMapping(value = "update/updateTree/applyUpdate", method = RequestMethod.POST)
+    public String update(@RequestParam(value = "id") Long id,
+                         @RequestParam(value = "name") String name,
+                         @RequestParam(value = "height") String height,
+                         @RequestParam(value = "describe") String describe,
+                         @RequestParam(value = "care_id") Long careId,
+                         @RequestParam(value = "care") String care,
+                         @RequestParam(value = "poisons") List<String> poisons){
+
+        List<TreePoisonDTO> treePoisonDTOs = new ArrayList<TreePoisonDTO>();
+        for (String poison : poisons) {
+            TreePoisonDTO treePoisonDTO = new TreePoisonDTO();
+
+            TreeDTO treeDTO = new TreeDTO();
+            treeDTO.setId(id);
+            treeDTO.setName(name);
+            treeDTO.setHeight(height);
+            treeDTO.setDescribe(describe);
+            CareDTO careDTO = new CareDTO();
+            careDTO.setId(careId);
+            careDTO.setDescribe(care);
+            treeDTO.setCareDTO(careDTO);
+
+            PoisonDTO poisonDTO = poisonService.getByName(poison);
+
+            treePoisonDTO.setTreeDTO(treeDTO);
+            treePoisonDTO.setPoisonDTO(poisonDTO);
+            treePoisonDTOs.add(treePoisonDTO);
+        }
+
+        try {
+            treeService.update(treePoisonDTOs);
+        } catch (NoSuchObjectException e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:../../";
     }
 
     @RequestMapping(value = "add/addTree")

@@ -15,10 +15,8 @@
     <input type="text" id="height_id" name="height">        <span style='color:red' id='heightV_id'></span>
     <h3>Описание</h3>
     <textarea id="describe_id" name="describe"></textarea>
-    <%--<input type="text" name="describe">--%>
     <h3>Уход</h3>
     <textarea id="care_id" name="care"></textarea>
-    <%--<input type="text" name="care">--%>
     <h3>Отрава для вредителей</h3>
 
     <table border="1" cellspacing="3" cellpadding="1">

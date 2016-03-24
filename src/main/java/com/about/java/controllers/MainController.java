@@ -26,7 +26,7 @@ public class MainController {
     @Autowired
     private SaveService saveService;
 
-    boolean created = false;
+    private boolean created = false;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView mainpage() {
